@@ -1,0 +1,1784 @@
+/*
+ * templateManager.css
+ * TemplateManager + TemplatePreview + template sections/subsections + preview + print.
+ * Import this file in TemplateManager and TemplatePreview (or once in the shared parent).
+ */
+
+
+/* =========================================================
+   01 Template manager controls
+   ========================================================= */
+
+.rp-template-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.rp-template-list {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-bottom: 12px;
+}
+
+.rp-template-list > h3 {
+  flex: 0 0 auto;
+  margin: 0 0 12px;
+}
+
+.rp-template-list .rp-scroll {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-height: 48vh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #00968f #e3fffe;
+}
+
+.rp-template-list .rp-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.rp-template-list .rp-table {
+  min-width: 540px;
+}
+
+.rp-template-list .rp-table td:last-child,
+.rp-template-list .rp-table th:last-child {
+  min-width: 150px;
+}
+
+.rp-template-list .rp-scroll::-webkit-scrollbar,
+.rp-category-menu::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.rp-template-list .rp-scroll::-webkit-scrollbar-thumb,
+.rp-category-menu::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: #00968f;
+}
+
+.rp-doctor-workspace,
+.rp-template-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.rp-doctor-form,
+.rp-doctor-preview,
+.rp-template-live-preview {
+  min-width: 0;
+}
+
+.rp-template-workspace {
+  margin-top: 16px;
+}
+
+@media (min-width: 641px) and (max-width: 950px) {
+.rp-template-toolbar {
+    gap: 8px;
+  }
+
+.rp-template-list .rp-scroll {
+    max-height: 42vh;
+  }
+
+.rp-template-list .rp-table th,
+  .rp-template-list .rp-table td {
+    padding: 7px 8px;
+  }
+
+.rp-template-list .rp-table {
+    min-width: 500px;
+  }
+
+.rp-doctor-workspace,
+  .rp-template-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+.rp-preview-scroll {
+    max-height: 60vh;
+  }
+
+.rp-live-sheet {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+.rp-template-toolbar {
+    align-items: stretch;
+    gap: 8px;
+  }
+
+.rp-template-toolbar .rp-spacer {
+    display: none;
+  }
+
+.rp-template-toolbar > .rp-btn {
+    width: 100%;
+  }
+
+.rp-template-list .rp-scroll {
+    max-height: 40vh;
+  }
+
+.rp-template-list .rp-table {
+    min-width: 500px;
+  }
+
+.rp-template-list .rp-table th,
+  .rp-template-list .rp-table td {
+    padding: 7px;
+    font-size: 12px;
+  }
+
+.rp-doctor-workspace,
+  .rp-template-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+.rp-field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+.rp-live-sheet {
+    min-height: 650px;
+    padding: 10px;
+  }
+
+.rp-live-clinic {
+    padding-left: 0;
+  }
+
+.rp-live-patient {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+.rp-live-footer {
+    flex-direction: column;
+  }
+
+.rp-preview-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+.rp-preview-scroll {
+    max-height: 55vh;
+    padding: 8px;
+  }
+}
+
+.rp-template-category-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: end;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.rp-template-workspace,
+.rp-template-workspace > section,
+.rp-template-workspace .rp-card {
+  min-width: 0;
+}
+
+.rp-template-workspace .rp-card {
+  overflow: visible;
+}
+
+@media (min-width: 641px) and (max-width: 950px) {
+.rp-template-category-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+.rp-template-category-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+
+.rp-template-category-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: end;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 640px) {
+.rp-se-card {
+    padding: 8px;
+  }
+
+.rp-se-card-header {
+    align-items: flex-start;
+  }
+
+.rp-se-actions {
+    gap: 3px;
+  }
+
+.rp-se-action {
+    width: 29px;
+    height: 29px;
+  }
+
+.rp-se-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+.rp-se-heading-field,
+  .rp-se-default-field {
+    grid-column: auto;
+  }
+
+.rp-template-category-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+}
+
+.rp-doctor-workspace,
+.rp-template-workspace {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.rp-doctor-form h3,
+.rp-template-workspace h3 {
+  margin: 0 0 12px;
+}
+
+.rp-template-toolbar {
+  margin-bottom: 16px;
+}
+
+.rp-template-list {
+  margin-bottom: 20px;
+}
+
+.rp-template-workspace {
+  margin-top: 20px;
+}
+
+
+
+/* =========================================================
+   05 Preview toolbar and responsive preview
+   ========================================================= */
+
+.rp-preview-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+  background: #d9f5f3;
+}
+
+.rp-preview-scroll {
+  max-height: 100%;
+  overflow: auto;
+  padding: 12px;
+  background: #e3fffe;
+}
+
+.rp-rnd-element {
+  z-index: 2;
+}
+
+.rp-rnd-element:hover {
+  outline: 1px dashed #00968f;
+}
+
+.rp-logo-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.rp-preview-toolbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rp-mobile-preview-toggle {
+  display: none;
+}
+
+.rp-preview-content {
+  min-width: 0;
+}
+
+.rp-preview-panel,
+.rp-preview-scroll {
+  min-width: 0;
+}
+
+@media (max-width: 950px) {
+.rp-mobile-preview-toggle {
+    display: inline-flex;
+  }
+
+.rp-template-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+.rp-template-live-preview {
+    min-width: 0;
+    width: 100%;
+  }
+
+.rp-mobile-preview-closed .rp-preview-content {
+    display: none;
+  }
+
+.rp-mobile-preview-open .rp-preview-content {
+    display: block;
+  }
+
+.rp-preview-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+.rp-preview-toolbar-actions {
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 951px) {
+.rp-mobile-preview-toggle {
+    display: none;
+  }
+
+.rp-mobile-preview-closed .rp-preview-content,
+  .rp-mobile-preview-open .rp-preview-content {
+    display: block;
+  }
+}
+
+.rp-preview-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--rp-border, #e2e8f0);
+  border-radius: 12px;
+  background: var(--rp-surface, #fff);
+}
+
+.rp-preview-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid var(--rp-border, #e2e8f0);
+}
+
+.rp-logo-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.rp-preview-scroll {
+  max-height: 80vh;
+  overflow: auto;
+  padding: 16px;
+  background: #eef2f7;
+}
+
+.rp-rnd-element:hover {
+  outline: 1px dashed #2563eb;
+}
+
+@media (max-width: 950px) {
+.rp-preview-scroll {
+    max-height: none;
+  }
+}
+
+.rp-preview-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.rp-preview-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.rp-rnd-element:hover {
+  outline: 1px dashed var(--accent);
+}
+
+@media (max-width: 950px) {
+.rp-doctor-workspace,
+  .rp-template-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+.rp-preview-scroll {
+    max-height: none;
+  }
+}
+
+
+
+/* =========================================================
+   04 Preview sheet and report sections
+   ========================================================= */
+
+.rp-live-sheet {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 850px;
+  padding: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  color: #172033;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.10);
+}
+
+.rp-live-patient {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.rp-live-sections {
+  position: relative;
+  min-width: 0;
+  min-height: 400px;
+  margin-top: 12px;
+}
+
+.rp-live-section {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 55px;
+  padding: 9px;
+  overflow-wrap: anywhere;
+  border: 1px solid #cde9e6;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.rp-live-section h4 {
+  margin: 0 0 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #cde9e6;
+  font-size: 12px;
+}
+
+.rp-live-section-content {
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.rp-live-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 20px;
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+}
+
+.rp-live-sheet {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 320px;
+  min-height: 900px;
+  padding: 18px;
+  overflow: hidden;
+  color: #172033;
+  background: #fff;
+  box-shadow: 0 2px 12px rgb(15 23 42 / 10%);
+}
+
+.rp-live-patient {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  padding: 14px 0;
+  font-size: 11px;
+  border-bottom: 1px solid #dbe3ed;
+  overflow-wrap: anywhere;
+}
+
+.rp-live-sections {
+  position: relative;
+  min-height: 420px;
+  padding-top: 12px;
+}
+
+.rp-live-section {
+  box-sizing: border-box;
+  min-width: 100%;
+  min-height: 75px;
+  padding: 10px;
+  border: 1px solid #dbe3ed;
+  border-radius: 4px;
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+
+.rp-live-section h4 {
+  margin: 0 0 9px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+}
+
+.rp-live-section-content {
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.rp-live-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 25px;
+  margin-top: 18px;
+  border-top: 1px solid #dbe3ed;
+  font-size: 10px;
+}
+
+@media (max-width: 520px) {
+.rp-live-sheet {
+    padding: 12px;
+  }
+
+.rp-live-patient {
+    grid-template-columns: 1fr;
+  }
+
+.rp-live-footer {
+    flex-direction: column;
+  }
+
+.rp-preview-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.rp-live-sheet {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 950px;
+  margin: 0 auto;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 2px;
+  color: #172033;
+  background: #fff;
+  box-shadow: 0 2px 12px rgb(15 23 42 / 10%);
+}
+
+.rp-live-patient {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #cbd5e1;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.rp-live-sections {
+  position: relative;
+  min-height: 460px;
+  margin-top: 12px;
+}
+
+.rp-live-section {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 55px;
+  padding: 10px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.rp-live-section h4 {
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+}
+
+.rp-live-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 25px;
+  margin-top: 18px;
+  border-top: 1px solid #cbd5e1;
+  font-size: 10px;
+}
+
+@media (max-width: 520px) {
+.rp-live-patient {
+    grid-template-columns: 1fr;
+  }
+
+.rp-live-footer {
+    flex-direction: column;
+  }
+
+.rp-preview-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+
+
+/* =========================================================
+   03 Template header and logo
+   ========================================================= */
+
+.rp-live-header {
+  position: relative;
+  min-height: 100px;
+  border-bottom: 2px solid #00968f;
+}
+
+.rp-live-clinic {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.rp-live-clinic h2 {
+  margin: 0 0 5px;
+  color: #007973;
+  font-size: 18px;
+}
+
+.rp-live-clinic h3 {
+  margin: 8px 0 0;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.rp-live-clinic p {
+  margin: 3px 0;
+  color: #475569;
+  font-size: 11px;
+}
+
+.rp-live-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px dashed #94a3b8;
+  border-radius: 5px;
+  background: #f8fafc;
+}
+
+.rp-live-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.rp-live-logo span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.rp-live-logo {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.rp-live-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media screen and (max-width: 640px) {
+.rp-preview-panel {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+.rp-preview-toolbar {
+    gap: 8px;
+    padding: 8px;
+  }
+
+.rp-preview-toolbar > div:first-child {
+    min-width: 0;
+    flex: 1 1 140px;
+  }
+
+.rp-preview-toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+  }
+
+.rp-preview-toolbar-actions .rp-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+.rp-preview-scroll {
+    max-height: 65vh;
+    overflow: auto;
+    padding: 5px;
+    background: #e3fffe;
+  }
+
+.rp-preview-scroll .rp-live-sheet {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0;
+    padding: 8px;
+    overflow: hidden;
+    transform-origin: top left;
+  }
+
+.rp-live-header {
+    min-height: 68px;
+    padding-left: 0;
+  }
+
+.rp-live-clinic {
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+
+.rp-live-clinic h2 {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+.rp-live-clinic h3 {
+    margin-top: 5px;
+    font-size: 11px;
+  }
+
+.rp-live-clinic p {
+    margin: 2px 0;
+    font-size: 9px;
+    line-height: 1.3;
+  }
+
+.rp-live-header .react-draggable {
+    width: 48px !important;
+    height: 38px !important;
+    min-width: 48px;
+    min-height: 38px;
+  }
+
+.rp-live-logo {
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+    overflow: hidden;
+  }
+
+.rp-live-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+.rp-live-logo span {
+    font-size: 8px;
+  }
+
+.rp-live-patient {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    padding: 8px 0;
+    font-size: 9px;
+  }
+
+.rp-live-sections {
+    min-height: 0;
+    margin-top: 8px;
+  }
+
+.rp-live-section {
+    padding: 6px;
+    border-radius: 3px;
+  }
+
+.rp-live-section h4 {
+    margin-bottom: 5px;
+    padding-bottom: 4px;
+    font-size: 10px;
+  }
+
+.rp-live-section-content,
+  .rp-rich-preview {
+    font-size: 9px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+.rp-live-footer {
+    gap: 8px;
+    padding-top: 10px;
+    margin-top: 10px;
+    font-size: 8px;
+  }
+}
+
+.rp-letterhead { text-align: center; padding-bottom: 12px; border-bottom: 4px solid var(--accent-dark); }
+
+.rp-lh-name  { font-size: 1.9rem; font-weight: 800; color: var(--accent-dark); letter-spacing: -.01em; }
+
+.rp-lh-tag   { font-weight: 600; color: #1e293b; }
+
+.rp-lh-small { font-size: .75rem; color: #475569; }
+
+.rp-live-header {
+  position: relative;
+  min-height: 125px;
+  border-bottom: 2px solid #dbe3ed;
+}
+
+.rp-live-logo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #94a3b8;
+  border-radius: 5px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.rp-live-logo span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.rp-live-clinic {
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.rp-live-clinic h2 {
+  margin: 0 0 5px;
+  font-size: 19px;
+}
+
+.rp-live-clinic h3 {
+  margin: 10px 0 0;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.rp-live-clinic p {
+  margin: 3px 0;
+  font-size: 11px;
+  color: #475569;
+}
+
+.rp-letterhead {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) 90px;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.rp-lh-logo {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.rp-lh-logo img {
+  display: block;
+  max-width: 75px;
+  max-height: 75px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.rp-lh-details {
+  grid-column: 2;
+  text-align: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.rp-lh-name {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.rp-lh-tag,
+.rp-lh-small {
+  text-align: center;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.rp-lh-spacer {
+  grid-column: 3;
+}
+
+.rp-live-header {
+  position: relative;
+  min-height: 125px;
+  border-bottom: 3px solid var(--accent-dark);
+}
+
+.rp-live-clinic {
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.rp-live-clinic h2 {
+  margin: 0 0 5px;
+  font-size: 19px;
+  color: var(--accent-dark);
+}
+
+.rp-live-clinic h3 {
+  margin: 10px 0 0;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+
+
+/* =========================================================
+   02 Sections and subsections
+   ========================================================= */
+
+.rp-field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.2fr) auto;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.rp-se-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.rp-sec-box {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.rp-tag {
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #d9f5f3;
+  font-size: 12px;
+}
+
+.rp-se-editor { display: grid; gap: 9px; min-width: 0; }
+
+.rp-se-card { min-width: 0; margin: 0; padding: 10px; border: 1px solid #d9e6e5; border-radius: 6px; background: #fff; }
+
+.rp-se-card-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+
+.rp-se-card-title { display: flex; align-items: center; gap: 8px; min-width: 0; overflow-wrap: anywhere; }
+
+.rp-se-number { display: inline-flex; flex: 0 0 28px; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #d2f4f1; color: #007973; font-size: 12px; font-weight: 700; }
+
+.rp-se-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 5px; margin-left: auto; }
+
+.rp-se-action { display: inline-flex; flex: 0 0 32px; align-items: center; justify-content: center; width: 32px; height: 30px; padding: 0; border: 1px solid transparent; border-radius: 5px; font: inherit; font-size: 18px; font-weight: 700; line-height: 1; cursor: pointer; }
+
+.rp-se-action-move { background: #00968f; color: #fff; }
+
+.rp-se-action-move:hover:not(:disabled) { background: #007973; }
+
+.rp-se-action-delete { background: #dc3545; color: #fff; }
+
+.rp-se-action-delete:hover { background: #b91c1c; }
+
+.rp-se-action:disabled { border-color: #e2e8f0; background: #eef2f6; color: #94a3b8; cursor: not-allowed; }
+
+.rp-se-fields { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 10px; min-width: 0; }
+
+.rp-se-field { min-width: 0; width: 100%; }
+
+.rp-se-field .rp-label { display: block; margin-bottom: 4px; font-size: 12px; }
+
+.rp-se-field .rp-input { box-sizing: border-box; width: 100%; min-width: 0; }
+
+.rp-se-default-field { grid-column: 1 / -1; }
+
+.rp-se-default-text { min-height: 62px; resize: vertical; line-height: 1.4; }
+
+.rp-se-add-row { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
+
+@media (max-width: 950px) {
+.rp-se-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.rp-se-default-field { grid-column: 1 / -1; }
+}
+
+@media (max-width: 640px) {
+.rp-se-card { padding: 8px; }
+
+.rp-se-card-header { align-items: flex-start; gap: 6px; }
+
+.rp-se-card-title { gap: 6px; padding-top: 3px; font-size: 13px; }
+
+.rp-se-actions { gap: 4px; }
+
+.rp-se-action { flex-basis: 29px; width: 29px; height: 29px; }
+
+.rp-se-fields, .rp-organisation-grid { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+
+.rp-se-default-field, .rp-organisation-address { grid-column: auto; }
+
+.rp-se-add-row { flex-wrap: wrap; }
+}
+
+.rp-se-editor {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.rp-se-card {
+  min-width: 0;
+  padding: 10px;
+  margin: 0;
+  border: 1px solid #cfe5e3;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.rp-se-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.rp-se-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rp-se-number {
+  display: inline-flex;
+  flex: 0 0 28px;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #d2f4f1;
+  color: #007973;
+  font-weight: 700;
+}
+
+.rp-se-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+}
+
+.rp-se-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 31px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rp-se-action-move {
+  background: #00968f;
+  color: #ffffff;
+}
+
+.rp-se-action-move:hover:not(:disabled) {
+  background: #007973;
+}
+
+.rp-se-action-delete {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+.rp-se-action-delete:hover {
+  background: #b91c1c;
+}
+
+.rp-se-action:disabled {
+  border-color: #e2e8f0;
+  background: #eef2f6;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.rp-se-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 10px;
+  min-width: 0;
+}
+
+.rp-se-field {
+  min-width: 0;
+  width: 100%;
+}
+
+.rp-se-heading-field {
+  grid-column: 1 / -1;
+}
+
+.rp-se-default-field {
+  grid-column: 1 / -1;
+}
+
+.rp-se-field .rp-label {
+  margin-bottom: 4px;
+}
+
+.rp-se-add-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+@media (min-width: 641px) and (max-width: 950px) {
+.rp-se-fields {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+.rp-se-heading-field,
+  .rp-se-default-field {
+    grid-column: 1 / -1;
+  }
+}
+
+.rp-sec-box { border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 12px; background: #fff; }
+
+.rp-tag { font-size: .75rem; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; }
+
+.rp-field-row { display: grid; grid-template-columns: 2fr 1fr 1.2fr auto; gap: 8px; margin-bottom: 6px; }
+
+@media (max-width: 640px) {
+.rp-field-row { grid-template-columns: 1fr; }
+}
+
+
+
+/* =========================================================
+   07 Other template-related rules
+   ========================================================= */
+
+.rp-selected-patient,
+.rp-template-summary,
+.rp-selected {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--accent-soft);
+  overflow-wrap: anywhere;
+}
+
+.rp-print-only {
+  display: none;
+}
+
+.rp-rich-content ul,
+.rp-rich-content ol,
+.rp-rich-preview ul,
+.rp-rich-preview ol {
+  padding-left: 22px;
+  margin: 4px 0;
+}
+
+.rp-rich-preview {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.rp-rich-preview p {
+  margin: 0 0 5px;
+}
+
+.rp-section { margin-bottom: 20px; }
+
+.rp-section h3 { font-size: 1rem; font-weight: 700; margin: 0 0 6px; }
+
+.rp-print-only { display: none; }
+
+.rp-selected-patient,
+.rp-template-summary {
+  padding: 14px;
+  margin: 12px 0 18px;
+  border: 1px solid var(--rp-border, #e2e8f0);
+  border-radius: 10px;
+  background: var(--rp-surface, #f8fafc);
+}
+
+
+
+/* =========================================================
+   06 Print
+   ========================================================= */
+
+@media print {
+.navbar,
+  .rp-noprint,
+  .rp-template-toolbar {
+    display: none !important;
+  }
+
+.rp-print-only {
+    display: block !important;
+  }
+
+.rp-template-list .rp-scroll {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media print {
+@page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+.rp-page,
+  .rp-page-md,
+  .rp-page-sm,
+  .rp-preview-panel,
+  .rp-preview-content,
+  .rp-preview-scroll {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+.rp-noprint,
+  .rp-preview-toolbar,
+  .rp-mobile-preview-toggle,
+  .rp-template-toolbar,
+  .rp-se-actions,
+  .rp-rich-toolbar {
+    display: none !important;
+  }
+
+.rp-print-area {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    transform: none !important;
+  }
+
+.rp-print-area .rp-live-sections {
+    position: static !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+.rp-print-area .rp-live-sections > .react-draggable {
+    position: relative !important;
+    inset: auto !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 0 8mm !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+
+.rp-print-area .rp-live-section {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-bottom: 1px solid #d7dddc !important;
+    border-radius: 0 !important;
+    padding: 0 0 5mm !important;
+    margin: 0 !important;
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+
+.rp-print-area .rp-live-section h4 {
+    margin: 0 0 3mm !important;
+    page-break-after: avoid;
+    break-after: avoid-page;
+  }
+
+.rp-print-area .rp-live-section-content,
+  .rp-print-area .rp-rich-preview {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+.rp-print-area .rp-live-header {
+    position: relative !important;
+    height: auto !important;
+    min-height: 25mm !important;
+    margin-bottom: 5mm !important;
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+
+.rp-print-area .rp-live-header .react-draggable {
+    position: absolute !important;
+    transform: none !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 22mm !important;
+    height: 18mm !important;
+  }
+
+.rp-print-area .rp-live-logo {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+.rp-print-area .rp-live-logo img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+.rp-print-area .rp-live-clinic {
+    padding-left: 25mm !important;
+  }
+
+.rp-print-area .rp-live-patient {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+    margin-bottom: 5mm !important;
+  }
+
+.rp-print-area .rp-live-footer {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+
+.rp-print-area .rp-rnd-element {
+    outline: none !important;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 12mm;
+}
+
+@media print {
+.rp-noprint,
+  .rp-doctor-form,
+  .rp-report-heading,
+  .rp-preview-toolbar,
+  .rp-logo-upload,
+  .rp-template-toolbar,
+  .rp-btn,
+  button {
+    display: none !important;
+  }
+
+.rp-doctor-reports-page,
+  .rp-doctor-workspace,
+  .rp-doctor-print-preview,
+  .rp-preview-panel,
+  .rp-preview-scroll {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+.rp-sheet.rp-live-sheet,
+  .rp-print-area {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+.rp-live-header {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 76px !important;
+    height: auto !important;
+    padding: 0 65px 10px !important;
+    box-sizing: border-box !important;
+    border-bottom: 2px solid #008577 !important;
+  }
+
+.rp-live-clinic {
+    position: static !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    overflow-wrap: anywhere !important;
+  }
+
+.rp-live-clinic h2 {
+    margin: 0 0 4px !important;
+    font-size: 18pt !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+  }
+
+.rp-live-clinic h3 {
+    margin: 4px 0 0 !important;
+    font-size: 10pt !important;
+    text-align: center !important;
+  }
+
+.rp-live-clinic p {
+    margin: 2px 0 !important;
+    font-size: 9pt !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
+  }
+
+.rp-live-header .react-draggable,
+  .rp-live-header .rp-rnd-element {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 54px !important;
+    height: 48px !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+.rp-live-logo {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+.rp-live-logo img {
+    display: block !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+.rp-live-patient {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px 14px !important;
+    width: 100% !important;
+    margin: 10px 0 !important;
+    padding: 0 0 9px !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    font-size: 9pt !important;
+    line-height: 1.35 !important;
+  }
+
+.rp-live-sections,
+  .rp-flow-sections {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+.rp-live-sections > *,
+  .rp-flow-sections > *,
+  .rp-flow-section {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    transform: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+.rp-flow-section h4,
+  .rp-live-sections h4 {
+    margin: 0 0 6px !important;
+    font-size: 11pt !important;
+    line-height: 1.3 !important;
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+
+.rp-flow-section p,
+  .rp-flow-section div,
+  .rp-flow-section li,
+  .rp-live-sections p,
+  .rp-live-sections div,
+  .rp-live-sections li {
+    overflow-wrap: anywhere !important;
+    white-space: pre-wrap;
+  }
+
+.rp-flow-section img,
+  .rp-live-sections img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+.rp-flow-section ul,
+  .rp-live-sections ul {
+    padding-left: 20px !important;
+  }
+
+.rp-rnd-element .react-resizable-handle,
+  .react-resizable-handle {
+    display: none !important;
+  }
+}
+
+@media print {
+.rp-print-only { display: block !important; }
+}
+
+@media print {
+.rp-letterhead {
+    grid-template-columns: 90px minmax(0, 1fr) 90px !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+.rp-lh-details {
+    text-align: center !important;
+  }
+
+.rp-lh-name,
+  .rp-lh-tag,
+  .rp-lh-small {
+    text-align: center !important;
+  }
+
+.rp-lh-logo img {
+    max-width: 75px;
+    max-height: 75px;
+  }
+}
+
+
+/* Fix logo dragging horizontally and vertically */
+
+.rp-live-header {
+  position: relative !important;
+  min-height: 125px;
+}
+
+.rp-live-header-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  position: relative;
+  min-height: 125px;
+  width: 100%;
+}
+
+.rp-live-header-left {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100%;
+  height: 100%;
+  min-height: 125px;
+  pointer-events: none;
+}
+
+.rp-live-header-left .react-draggable,
+.rp-live-header-left .rp-rnd-element {
+  pointer-events: auto;
+}
+
+.rp-live-clinic {
+  position: relative;
+  z-index: 1;
+  grid-column: 1;
+  width: 100%;
+  padding: 4px 100px 10px !important;
+  text-align: center !important;
+  pointer-events: none;
+}
+
+.rp-live-header-right {
+  display: none;
+}
+
+/* Keep logo draggable when printing is not active */
+@media screen {
+  .rp-live-header-left .react-draggable {
+    touch-action: none;
+  }
+}
+

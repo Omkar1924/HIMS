@@ -1,0 +1,5 @@
+.register-page {
+  --accent: #2563eb;
+  --accent-ring: #dbeafe;
+}
+.register-page .card-header { border-top: 4px solid var(--accent); }

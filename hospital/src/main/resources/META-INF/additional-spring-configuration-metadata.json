@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "spellcheck.language",
+    "type": "java.lang.String",
+    "description": "A description for 'spellcheck.language'"
+  },
+  {
+    "name": "spellcheck.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spellcheck.url'"
+  },
+  {
+    "name": "spellcheck.ignore",
+    "type": "java.lang.String",
+    "description": "A description for 'spellcheck.ignore'"
+  }
+]}

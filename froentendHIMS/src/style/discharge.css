@@ -1,0 +1,313 @@
+/* Discharge summary module. Uses the same teal scheme as templateManager.css */
+
+.ds-field-box {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px dashed #cfe5e3;
+  border-radius: 6px;
+  background: #f7fffe;
+}
+
+.ds-ta {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  line-height: 1.4;
+  font-family: inherit;
+}
+
+/* Guided questions */
+.ds-section-card {
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #cfe5e3;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.ds-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ds-section-head h4 {
+  margin: 0;
+  color: #007973;
+}
+
+.ds-q {
+  margin-bottom: 12px;
+}
+
+.ds-helper {
+  margin: 2px 0 6px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.ds-yesno {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 6px;
+}
+
+.ds-notice {
+  margin-top: 4px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #fff8e1;
+  color: #7a5b00;
+  font-size: 12px;
+}
+
+.ds-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #007973;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ds-banner {
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid #f3c969;
+  border-radius: 6px;
+  background: #fff8e1;
+}
+
+.ds-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ds-status-DRAFT { background: #e2e8f0; color: #334155; }
+.ds-status-PENDING_REVIEW { background: #fff3cd; color: #7a5b00; }
+.ds-status-APPROVED { background: #d2f4f1; color: #007973; }
+
+/* Preview panel */
+.ds-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #cfe5e3;
+  background: #d9f5f3;
+}
+
+.ds-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ds-scroll {
+  padding: 12px;
+  background: #e3fffe;
+  overflow: visible;
+}
+
+/* Document */
+.ds-sheet {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 700px;
+  padding: 22px;
+  border: 1px solid #dbe3ed;
+  border-radius: 10px;
+  background: #fff;
+  color: #172033;
+  box-shadow: 0 2px 12px rgb(15 23 42 / 10%);
+}
+
+.ds-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #00968f;
+}
+
+.ds-logo {
+  display: flex;
+  flex: 0 0 72px;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border: 1px solid #cfe5e3;
+  border-radius: 10px;
+  background: #f8fafc;
+  font-size: 28px;
+}
+
+.ds-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ds-head-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ds-head-text h2 {
+  margin: 0;
+  color: #007973;
+  font-size: 18px;
+}
+
+.ds-head-text p {
+  margin: 2px 0;
+  color: #475569;
+  font-size: 11px;
+}
+
+.ds-head-text h3 {
+  margin: 6px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+
+.ds-patient {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #dbe3ed;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.ds-span-2 {
+  grid-column: 1 / -1;
+}
+
+.ds-course > h3 {
+  margin: 16px 0 4px;
+  font-size: 15px;
+}
+
+.ds-muted {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.ds-section {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5eceb;
+}
+
+.ds-section:last-child {
+  border-bottom: 0;
+}
+
+.ds-section h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.ds-section-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ds-section-text.bold {
+  font-weight: 700;
+}
+
+.ds-missing {
+  padding: 0 3px;
+  border-radius: 3px;
+  background: #fff3cd;
+}
+
+.ds-signs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 34px;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.ds-sign-line {
+  min-height: 28px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #94a3b8;
+  color: #172033;
+  font-size: 12px;
+}
+
+.ds-note {
+  margin-top: 18px;
+  color: #64748b;
+  font-size: 10px;
+}
+
+@media (max-width: 640px) {
+  .ds-patient,
+  .ds-signs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .rp-noprint,
+  .ds-toolbar {
+    display: none !important;
+  }
+
+  .rp-template-workspace {
+    display: block !important;
+  }
+
+  .ds-scroll,
+  .rp-preview-panel {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: #fff !important;
+  }
+
+  .ds-sheet {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .ds-missing {
+    background: none;
+  }
+
+  .ds-section {
+    break-inside: avoid;
+  }
+}
+
+/* Patient search: positioned dropdown menu, mirroring the template
+   category dropdown in templateManager.css (rp-category-menu / option). */
+.rp-patient-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+

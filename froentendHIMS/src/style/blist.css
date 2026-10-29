@@ -1,0 +1,218 @@
+.bill-list .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.bill-list .search-input {
+  flex: 1;
+  min-width: 240px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: .92rem;
+  outline: none;
+}
+.bill-list .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px #dbeafe; }
+
+.bill-list .tabs { display: flex; gap: 6px; }
+.bill-list .tab {
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: .85rem;
+  color: #374151;
+  cursor: pointer;
+}
+.bill-list .tab:hover { background: #f9fafb; }
+.bill-list .tab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+.bill-list .bill-no { font-weight: 600; color: var(--primary); white-space: nowrap; }
+
+/* modal */
+.bill-list .modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, .5);
+}
+.bill-list .modal {
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
+}
+.bill-list .modal-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.bill-list .modal-head h3 { margin: 0; font-size: 1.2rem; }
+.bill-list .modal-head p { margin: 2px 0 0; }
+.bill-list .modal-head-right { display: flex; align-items: center; gap: 10px; }
+.bill-list .bill-modal-actions { display: flex; align-items: center; gap: 8px; }
+.bill-list .invoice-kicker {
+  margin: 0 0 3px;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.bill-list .invoice-section { margin-top: 20px; }
+.bill-list .invoice-total-row { font-weight: 700; }
+.bill-list .invoice-summary { margin-top: 18px; }
+.bill-list .invoice-payments { margin-bottom: 20px; }
+.bill-list .invoice-status { margin: 6px 0 0; text-align: right; font-size: .82rem; }
+.bill-list .bill-authorization {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  margin-top: 42px;
+  padding-top: 12px;
+  font-size: .78rem;
+}
+.bill-list .bill-signature {
+  display: grid;
+  width: min(280px, 100%);
+  gap: 6px;
+  text-align: center;
+}
+.bill-list .bill-signature-line { height: 34px; border-bottom: 1px solid #111827; }
+
+.bill-list .modal-info {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+.bill-list .modal-info .patient-info-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  min-width: 0;
+}
+.bill-list .modal-info .patient-info-row > div {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  font-size: .88rem;
+}
+.bill-list .modal-info .sub { flex: 0 0 auto; font-size: .75rem; }
+.bill-list .modal-info strong { min-width: 0; overflow-wrap: anywhere; }
+.bill-list .modal-info .patient-address { grid-template-columns: minmax(0, 1fr); }
+
+.bill-list .modal .bill-table { border: 1px solid var(--border); border-radius: 8px; }
+.bill-list .modal-summary { margin-top: 16px; }
+.bill-list .modal-sub {
+  margin: 20px 0 8px;
+  font-size: .8rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bill-list .pay-history { margin: 0; padding: 0; list-style: none; }
+.bill-list .pay-history li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: .9rem;
+}
+.bill-list .pay-history li span:first-child { flex: 1; color: var(--muted); }
+.bill-list .chip { padding: 2px 10px; background: #e0e7ff; color: #3730a3; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+
+.bill-list .pay-form { margin-top: 8px; padding-top: 4px; border-top: 1px solid var(--border); }
+.bill-list .pay-form-row { display: flex; gap: 10px; }
+.bill-list .pay-form-row .input { flex: 1; }
+
+.bill-list .input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: .92rem;
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .bill-list .modal-info .patient-info-row { grid-template-columns: 1fr; gap: 7px; }
+  .bill-list .pay-form-row { flex-direction: column; }
+}
+
+.bill-list .header-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.bill-list .summary-row.extra { color: #166534; font-weight: 600; }
+.bill-list .hint { margin: 8px 0; }
+.bill-list .pay-form > .btn-outline { margin-top: 4px; }
+
+@media print {
+  body.printing-bill * { visibility: hidden !important; }
+  body.printing-bill .bill-list .modal-backdrop,
+  body.printing-bill .bill-list .modal-backdrop * { visibility: visible !important; }
+  body.printing-bill .bill-list .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    display: block;
+    padding: 0;
+    overflow: visible;
+    background: #fff;
+  }
+  body.printing-bill .bill-list .modal {
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  body.printing-bill .bill-list .no-print { display: none !important; }
+  body.printing-bill .bill-list .modal-head { border-bottom: 1px solid #d1d5db; padding-bottom: 14px; }
+  body.printing-bill .bill-list .modal-info .patient-info-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  body.printing-bill .bill-list .hims-brand { margin-bottom: 8px; }
+  body.printing-bill .bill-list .modal-info { background: #fff; border: 1px solid #9ca3af; }
+  body.printing-bill .bill-list .invoice-section { margin-top: 12px; }
+  body.printing-bill .bill-list .modal-sub {
+    margin: 0 0 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #6b7280;
+    color: #111827;
+  }
+  body.printing-bill .bill-list .modal .bill-table { break-inside: avoid; border-color: #6b7280; }
+  body.printing-bill .bill-list .bill-table th {
+    padding: 6px 8px;
+    background: #fff;
+    color: #111827;
+    border: 1px solid #9ca3af;
+  }
+  body.printing-bill .bill-list .bill-table td { padding: 6px 8px; border: 1px solid #9ca3af; }
+  body.printing-bill .bill-list .invoice-summary {
+    width: min(100%, 360px);
+    margin: 8px 0 8px auto;
+    padding: 4px 8px;
+    background: #fff;
+    border: 0;
+    border-top: 1px solid #111827;
+    border-radius: 0;
+  }
+  body.printing-bill .bill-list .summary-row { padding: 3px 0; }
+  body.printing-bill .bill-list .summary-row.total { border-color: #111827; }
+  body.printing-bill .bill-list .pay-history li { break-inside: avoid; }
+  body.printing-bill .bill-list .bill-authorization { break-inside: avoid; }
+  @page { margin: 16mm; }
+}

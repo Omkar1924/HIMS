@@ -1,0 +1,13 @@
+.update-page {
+  --accent: #f59e0b;
+  --accent-ring: #fde68a;
+}
+.update-page .card-header { border-top: 4px solid var(--accent); }
+.update-page .uhid-badge {
+  padding: 4px 12px;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 600;
+}

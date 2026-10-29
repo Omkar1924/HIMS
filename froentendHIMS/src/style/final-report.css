@@ -1,0 +1,123 @@
+.final-report-page .card-header { border-top: 4px solid var(--success); }
+.final-report-page .report-toolbar { align-items: center; }
+.final-report-page .report-section { margin-top: 18px; }
+.final-report-page .report-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  padding: 8px 0;
+  border-bottom: 1px solid #111827;
+}
+.final-report-page .report-heading h1 { margin: 0; font-size: 1.15rem; text-align: center; }
+.final-report-page .report-document-meta { display: grid; gap: 3px; text-align: right; font-size: .82rem; }
+.final-report-page .report-section-title {
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #6b7280;
+  font-size: .82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.final-report-page .report-patient {
+  display: grid;
+  gap: 4px;
+  padding: 7px 9px;
+  border: 1px solid #9ca3af;
+}
+.final-report-page .report-patient-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.final-report-page .report-patient-row > span { display: grid; gap: 2px; min-width: 0; }
+.final-report-page .report-patient small { color: #374151; font-size: .7rem; }
+.final-report-page .report-patient strong { overflow-wrap: anywhere; }
+.final-report-page .report-address { grid-template-columns: minmax(0, 1fr); }
+.final-report-page .report-value { margin: 0; }
+.final-report-page .report-bill { margin-bottom: 12px; break-inside: avoid; }
+.final-report-page .report-bill h4 {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 5px 8px;
+  border: 1px solid #9ca3af;
+  border-bottom: 0;
+  font-size: .78rem;
+}
+.final-report-page .report-bill-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px 18px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-top: 0;
+  font-size: .78rem;
+}
+.final-report-page .report-billing-total {
+  width: min(100%, 420px);
+  margin: 12px 0 0 auto;
+  border-top: 1px solid #111827;
+}
+.final-report-page .report-billing-total > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 6px;
+  border-bottom: 1px solid #d1d5db;
+  font-size: .82rem;
+}
+.final-report-page .report-billing-total .report-grand-total {
+  border-top: 1px solid #111827;
+  border-bottom: 2px solid #111827;
+  font-weight: 700;
+}
+.final-report-page .report-authorization {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 48px;
+  padding-top: 12px;
+  font-size: .78rem;
+}
+.final-report-page .report-signature {
+  display: grid;
+  width: min(280px, 48%);
+  gap: 6px;
+  text-align: center;
+}
+.final-report-page .signature-line { height: 34px; border-bottom: 1px solid #111827; }
+
+@media (max-width: 680px) {
+  .final-report-page .report-toolbar,
+  .final-report-page .report-heading { align-items: flex-start; flex-direction: column; }
+  .final-report-page .report-patient-row { grid-template-columns: 1fr; gap: 8px; }
+  .final-report-page .report-document-meta { text-align: left; }
+  .final-report-page .report-signature { width: min(280px, 100%); }
+}
+
+@media print {
+  .final-report-page { max-width: none; margin: 0; padding: 0; }
+  .final-report-page .card { box-shadow: none; }
+  .navbar,
+  .final-report-page .report-toolbar { display: none !important; }
+  .final-report-page .card-body { padding: 0; }
+  .final-report-page .report-section { break-inside: auto; }
+  .final-report-page .report-bill { break-inside: avoid; }
+  .final-report-page .table-box { overflow: visible; }
+  .final-report-page .report-heading { align-items: baseline; flex-direction: row; }
+  .final-report-page .report-document-meta { text-align: right; }
+  .final-report-page .report-patient { background: #fff; }
+  .final-report-page .bill-table th {
+    padding: 6px 8px;
+    background: #fff;
+    color: #111827;
+    border: 1px solid #9ca3af;
+  }
+  .final-report-page .bill-table td { padding: 6px 8px; border: 1px solid #9ca3af; }
+  .final-report-page .report-bill-summary { border-color: #9ca3af; }
+  .final-report-page .report-billing-total { break-inside: avoid; }
+  .final-report-page .report-authorization { break-inside: avoid; }
+  @page { margin: 16mm; }
+}

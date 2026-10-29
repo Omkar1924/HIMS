@@ -1,0 +1,76 @@
+.list-page .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.list-page .search-input {
+  flex: 1;
+  padding: 10px 12px 10px 38px;
+  background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239ca3af' stroke-width='2' viewBox='0 0 24 24'><circle cx='11' cy='11' r='7'/><path d='m21 21-4.3-4.3'/></svg>") no-repeat 12px center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: .92rem;
+  outline: none;
+}
+.list-page .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px #dbeafe; }
+
+.list-page .table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.list-page .table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.list-page .table th {
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-bottom: 1px solid var(--border);
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.list-page .table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+.list-page .table tbody tr:last-child td { border-bottom: 0; }
+.list-page .table tbody tr:hover { background: #f8fafc; }
+
+.list-page .uhid { font-weight: 600; color: var(--primary); white-space: nowrap; }
+
+.list-page .patient-cell { display: flex; align-items: center; gap: 12px; }
+.list-page .avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px; height: 36px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 50%;
+  font-size: .8rem;
+  font-weight: 600;
+}
+.list-page .patient-name { font-weight: 500; }
+.list-page .patient-sub { font-size: .8rem; color: var(--muted); }
+
+.list-page .badge {
+  display: inline-block;
+  padding: 2px 10px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 600;
+}
+.list-page .muted { color: var(--muted); }
+.list-page .actions { display: flex; justify-content: flex-end; gap: 8px; white-space: nowrap; }
+
+@media (max-width: 640px) {
+  .list-page .toolbar { flex-direction: column; align-items: stretch; }
+}

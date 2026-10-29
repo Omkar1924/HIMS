@@ -1,0 +1,117 @@
+.bill-create .card-header { border-top: 4px solid var(--primary); }
+
+/* ---------- patient search ---------- */
+.bill-create .card { overflow: visible; }
+.bill-create .search-box { position: relative; z-index: 30; }
+.bill-create .search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 260px;
+  margin-top: 4px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+.bill-create .search-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+}
+.bill-create .search-item:last-child { border-bottom: 0; }
+.bill-create .search-item:hover { background: #eff6ff; }
+.bill-create .search-item small { color: var(--muted); }
+.bill-create .search-empty { padding: 12px 14px; color: var(--muted); font-size: .9rem; }
+
+/* ---------- services ---------- */
+.bill-create .add-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.bill-create .add-row .grow { flex: 1; min-width: 220px; }
+.bill-create .add-row .qty { width: 90px; }
+
+/* ---------- payment layout ---------- */
+.bill-create .pay-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+.bill-create .quick-btns { display: flex; gap: 8px; }
+.bill-create .dep-check { font-size: .9rem; }
+.bill-create .extra-note {
+  padding: 10px 14px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  color: #166534;
+  font-size: .88rem;
+}
+
+/* ---------- bill summary ---------- */
+.bill-create .summary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.bill-create .summary-title {
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bill-create .summary-row.bill-total {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #d1d5db;
+  font-weight: 600;
+}
+.bill-create .summary-row.deposit-used { color: #3730a3; }
+
+.bill-create .pay-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0;
+  padding: 12px 0;
+  background: transparent;
+  border: 0;
+  border-top: 2px solid #111827;
+  border-bottom: 2px solid #111827;
+  border-radius: 0;
+  color: #111827;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.bill-create .pay-box strong {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.bill-create .deposit-left-box {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px dashed #d1d5db;
+}
+.bill-create .summary-row.deposit-left { color: #166534; font-weight: 600; }
+.bill-create .summary-note {
+  margin-top: -2px;
+  text-align: right;
+  font-size: .78rem;
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .bill-create .pay-layout { grid-template-columns: 1fr; }
+}
