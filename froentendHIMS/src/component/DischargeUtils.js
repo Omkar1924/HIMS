@@ -65,17 +65,14 @@ export const renderSections = (sections) =>
   }));
 
 // Sample text for the template manager preview (no real answers yet).
+// Shows the configured question for each field so added questions appear in preview.
 export const templateSample = (sections) =>
   sections.map((s) => ({
     id: s.id,
     heading: s.heading || "Untitled section",
     layout: s.layout,
     text: (s.fields ?? [])
-      .map((f) =>
-        f.narrative && f.narrative.trim()
-          ? f.narrative.replace("{{answer}}", "[documented information]")
-          : "[documented information]",
-      )
+      .map((f) => f.question?.trim() || "[No question]")
       .join("\n"),
   }));
 

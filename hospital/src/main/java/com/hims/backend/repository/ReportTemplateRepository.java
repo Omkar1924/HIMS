@@ -13,4 +13,8 @@ public interface ReportTemplateRepository extends JpaRepository<ReportTemplate, 
     List<ReportTemplate> findByCategoryOrderByNameAsc(String category);
     List<ReportTemplate> findByCategoryAndActiveTrueOrderByNameAsc(String category);
     Optional<ReportTemplate> findByNameIgnoreCase(String name);
+
+    List<ReportTemplate> findByDoctorId(Long doctorId);
+
+    List<ReportTemplate> findByEmployeeId(Long employeeId);
 }

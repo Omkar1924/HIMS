@@ -96,7 +96,7 @@ export default function DepartmentWorklist() {
                     <div className="rp-muted">{r.patient?.uhid}</div>
                   </td>
                   <td>{r.testName}</td>
-                  <td>{r.referringDoctor?.name ?? r.referringDoctor?.dname ?? "—"}</td>
+                  <td>{r.referringDoctor?.name ?? r.referringDoctor?.doctorName ?? "—"}</td>
                   <td>{fmt(r.sentToDeptAt ?? r.updatedAt ?? r.createdAt)}</td>
                   <td className="rp-right">
                     <button type="button" className="rp-btn rp-btn-primary" onClick={() => setOpenId(r.id)}>

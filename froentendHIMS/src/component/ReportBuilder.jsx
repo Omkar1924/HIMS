@@ -712,7 +712,7 @@ export default function ReportBuilder({
 
                 {doctors.map((doctor) => (
                   <option key={doctor.id} value={doctor.id}>
-                    {doctor.dname || doctor.name}
+                    {doctor.doctorName || doctor.name}
                   </option>
                 ))}
               </select>

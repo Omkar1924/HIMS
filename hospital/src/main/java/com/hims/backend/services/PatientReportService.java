@@ -23,18 +23,18 @@ import com.hims.backend.dto.ReportDtos.ReturnToDoctor;
 import com.hims.backend.dto.ReportDtos.SendForReview;
 import com.hims.backend.dto.ReportDtos.SendToDepartment;
 import com.hims.backend.dto.ReportDtos.UpdateReport;
+import com.hims.backend.entity.AddDoctor;
 import com.hims.backend.entity.Bill;
 import com.hims.backend.entity.BillItem;
-import com.hims.backend.entity.Doctor;
-import com.hims.backend.entity.Patient;
+import com.hims.backend.entity.PatientRegistration;
 import com.hims.backend.entity.PatientReport;
 import com.hims.backend.entity.ReportImage;
 import com.hims.backend.entity.ReportStatus;
+import com.hims.backend.repository.AddDoctorRepository;
 import com.hims.backend.repository.BillItemRepository;
-import com.hims.backend.repository.DoctorRepository;
 import com.hims.backend.repository.MedicalServiceRepository;
+import com.hims.backend.repository.PatientRegistrationRepository;
 import com.hims.backend.repository.PatientReportRepository;
-import com.hims.backend.repository.PatientRepository;
 import com.hims.backend.repository.ReportImageRepository;
 import com.hims.backend.repository.ReportTemplateRepository;
 
@@ -47,8 +47,8 @@ public class PatientReportService {
     private final PatientReportRepository repo;
     private final ReportTemplateRepository templateRepo;
     private final ReportImageRepository imageRepo;
-    private final PatientRepository patientRepo;          // needs findByUhid(String)
-    private final DoctorRepository doctorRepo;
+    private final PatientRegistrationRepository patientRepo;          // needs findByUhid(String)
+    private final AddDoctorRepository doctorRepo;
     private final MedicalServiceRepository serviceRepo;
     private final BillItemRepository billItemRepo;
 
@@ -60,19 +60,24 @@ public class PatientReportService {
 
     @Transactional
     public ReportResponse create(CreateReport q) {
-        Patient patient = patientRepo.findByUhid(q.patientUhid())
+        PatientRegistration patient = patientRepo.findByUhid(q.patientUhid())
                 .orElseThrow(() -> bad("Patient not found"));
 
-        Doctor referring = (q.referringDoctorId() != null)
+        AddDoctor referring = (q.referringDoctorId() != null)
                 ? doctorRepo.findById(q.referringDoctorId()).orElseThrow(() -> bad("Doctor not found"))
                 : patient.getDoctor();                    // default: the patient's own doctor
         if (referring == null) {
-			throw bad("Referring doctor is required");
-		}
+            throw bad("Referring doctor is required");
+        }
 
         PatientReport r = new PatientReport();
         r.setPatient(patient);
         r.setReferringDoctor(referring);
+        r.setReferringDoctorDname(referring.getDoctorName());
+        r.setReferringDoctorSpecialization(referring.getSpecialization());
+        r.setReferringDoctorFee(referring.getFee());
+        r.setReferringDoctorQualification(referring.getDegree());
+        r.setReferringDoctorRegistrationNo(referring.getRegistrationNo());
         r.setVisitType(q.visitType());
         r.setCategory(q.category());
         r.setTestName(q.testName());
@@ -80,19 +85,19 @@ public class PatientReportService {
         r.setCreatedBy(q.createdBy());
 
         if (q.serviceId() != null) {
-			r.setMedicalService(serviceRepo.findById(q.serviceId()).orElseThrow(() -> bad("Test not found")));
-		}
+            r.setMedicalService(serviceRepo.findById(q.serviceId()).orElseThrow(() -> bad("Test not found")));
+        }
         if (q.templateId() != null) {
-			r.setTemplate(templateRepo.findById(q.templateId()).orElseThrow(() -> bad("Template not found")));
-		}
+            r.setTemplate(templateRepo.findById(q.templateId()).orElseThrow(() -> bad("Template not found")));
+        }
         if (q.billItemId() != null) {
             if (repo.existsByBillItemId(q.billItemId())) {
-				throw bad("A report already exists for this test");
-			}
+                throw bad("A report already exists for this test");
+            }
             BillItem bi = billItemRepo.findById(q.billItemId()).orElseThrow(() -> bad("Bill item not found"));
             if (!bi.getBill().getPatient().getId().equals(patient.getId())) {
-				throw bad("Bill item does not belong to this patient");
-			}
+                throw bad("Bill item does not belong to this patient");
+            }
             r.setBillItem(bi);
         }
 
@@ -105,17 +110,17 @@ public class PatientReportService {
     public ReportResponse update(Long id, UpdateReport q) {
         PatientReport r = load(id);
         if (r.getStatus() == ReportStatus.APPROVED) {
-			throw bad("Approved reports cannot be edited");
-		}
+            throw bad("Approved reports cannot be edited");
+        }
         if (q.contentJson() != null) {
-			r.setContentJson(q.contentJson());
-		}
+            r.setContentJson(q.contentJson());
+        }
         if (q.testName() != null) {
-			r.setTestName(q.testName());
-		}
+            r.setTestName(q.testName());
+        }
         if (q.visitType() != null) {
-			r.setVisitType(q.visitType());
-		}
+            r.setVisitType(q.visitType());
+        }
         return toResponse(repo.save(r));
     }
 
@@ -123,10 +128,15 @@ public class PatientReportService {
     public ReportResponse send(Long id, SendForReview q) {
         PatientReport r = load(id);
         if (r.getStatus() == ReportStatus.APPROVED) {
-			throw bad("Report is already approved");
-		}
-        Doctor d = doctorRepo.findById(q.reviewingDoctorId()).orElseThrow(() -> bad("Doctor not found"));
+            throw bad("Report is already approved");
+        }
+        AddDoctor d = doctorRepo.findById(q.reviewingDoctorId()).orElseThrow(() -> bad("Doctor not found"));
         r.setReviewingDoctor(d);
+        r.setReviewingDoctorDname(d.getDoctorName());
+        r.setReviewingDoctorSpecialization(d.getSpecialization());
+        r.setReviewingDoctorFee(d.getFee());
+        r.setReviewingDoctorQualification(d.getDegree());
+        r.setReviewingDoctorRegistrationNo(d.getRegistrationNo());
         r.setStatus(ReportStatus.SENT_FOR_REVIEW);
         return toResponse(repo.save(r));
     }
@@ -137,8 +147,8 @@ public class PatientReportService {
         if (r.getStatus() != ReportStatus.RETURNED_TO_DOCTOR
                 && r.getStatus() != ReportStatus.SENT_FOR_REVIEW
                 && r.getStatus() != ReportStatus.DRAFT) {
-			throw bad("Report cannot be approved in its current state");
-		}
+            throw bad("Report cannot be approved in its current state");
+        }
         r.setDoctorComment(q.doctorComment());
         r.setStatus(ReportStatus.APPROVED);
         r.setApprovedAt(LocalDateTime.now());
@@ -157,8 +167,8 @@ public class PatientReportService {
     public ReportResponse sendToDepartment(Long id, SendToDepartment q) {
         PatientReport r = load(id);
         if (r.getStatus() == ReportStatus.APPROVED) {
-			throw bad("Report is already approved");
-		}
+            throw bad("Report is already approved");
+        }
         String dept = (q.department() == null || q.department().isBlank()) ? r.getCategory() : q.department();
         r.setDepartment(dept);
         r.setStatus(ReportStatus.SENT_TO_DEPARTMENT);
@@ -170,8 +180,8 @@ public class PatientReportService {
     public ReportResponse returnToDoctor(Long id, ReturnToDoctor q) {
         PatientReport r = load(id);
         if (r.getStatus() != ReportStatus.SENT_TO_DEPARTMENT) {
-			throw bad("Report is not with a department");
-		}
+            throw bad("Report is not with a department");
+        }
         r.setFilledBy(q.filledBy());
         r.setDepartmentRemark(q.departmentRemark());
         r.setStatus(ReportStatus.RETURNED_TO_DOCTOR);
@@ -221,11 +231,11 @@ public class PatientReportService {
     public List<PendingTest> pendingTests(List<String> categories) {
         return repo.findPendingTests(categories).stream().map(bi -> {
             Bill b = bi.getBill();
-            Patient p = b.getPatient();
-            Doctor d = b.getDoctor();
+            PatientRegistration p = b.getPatient();
+            AddDoctor d = b.getDoctor();
             return new PendingTest(bi.getId(), b.getBillNo(), p.getUhid(), fullName(p),
                     d == null ? null : d.getId(),
-                    d == null ? null : d.getDname(),
+                    d == null ? null : d.getDoctorName(),
                     bi.getServiceName(), bi.getCategory());
         }).toList();
     }
@@ -236,15 +246,15 @@ public class PatientReportService {
     public ImageInfo addImage(Long reportId, MultipartFile file, String caption) throws IOException {
         PatientReport r = load(reportId);
         if (r.getStatus() == ReportStatus.APPROVED) {
-			throw bad("Approved reports cannot be edited");
-		}
+            throw bad("Approved reports cannot be edited");
+        }
         if (file.isEmpty()) {
-			throw bad("Empty file");
-		}
+            throw bad("Empty file");
+        }
         String ct = file.getContentType();
         if (ct == null || !ct.startsWith("image/")) {
-			throw bad("Only image files are allowed");
-		}
+            throw bad("Only image files are allowed");
+        }
         ReportImage img = new ReportImage();
         img.setReport(r);
         img.setFileName(file.getOriginalFilename());
@@ -265,8 +275,8 @@ public class PatientReportService {
     public void deleteImage(Long imageId) {
         ReportImage img = imageRepo.findById(imageId).orElseThrow(() -> bad("Image not found"));
         if (img.getReport().getStatus() == ReportStatus.APPROVED) {
-			throw bad("Approved reports cannot be edited");
-		}
+            throw bad("Approved reports cannot be edited");
+        }
         imageRepo.delete(img);
     }
 
@@ -276,20 +286,20 @@ public class PatientReportService {
         return repo.findWithRelationsById(id).orElseThrow(() -> bad("Report not found"));
     }
 
-    private static String fullName(Patient p) {
+    private static String fullName(PatientRegistration p) {
         return Stream.of(p.getFirstName(), p.getMiddleName(), p.getLastName())
                 .filter(s -> s != null && !s.isBlank()).collect(Collectors.joining(" "));
     }
 
-    private DoctorInfo toDoctor(Doctor d) {
+    private DoctorInfo toDoctor(AddDoctor d) {
         if (d == null) {
-			return null;
-		}
-        return new DoctorInfo(d.getId(), d.getDname(), d.getQualification(), d.getRegistrationNo());
+            return null;
+        }
+        return new DoctorInfo(d.getId(), d.getDoctorName(), d.getSpecialization(), d.getRegistrationNo());
     }
 
-    private PatientInfo toPatient(Patient p) {
-        // TODO: add gender / age / phone getters from your Patient entity if you want them in the header
+    private PatientInfo toPatient(PatientRegistration p) {
+        // TODO: add gender / age / phone getters from your PatientRegistration entity if you want them in the header
         return new PatientInfo(p.getId(), p.getUhid(), fullName(p), null, null, null);
     }
 

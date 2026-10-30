@@ -259,6 +259,26 @@
   }
 }
 
+.rp-created-by-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.rp-created-by-row > div {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .rp-created-by-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
 .rp-doctor-workspace,
 .rp-template-workspace {
   display: grid;

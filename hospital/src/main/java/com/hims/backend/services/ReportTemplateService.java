@@ -98,6 +98,8 @@ public class ReportTemplateService {
         template.setLocation(in.getLocation());
         template.setActive(in.isActive());
         template.setDefaultTemplate(in.isDefaultTemplate());
+        template.setDoctor(in.getDoctor());
+        template.setEmployee(in.getEmployee());
 
         // Report section definitions
         template.setSectionsJson(in.getSectionsJson());
@@ -194,6 +196,8 @@ public class ReportTemplateService {
         copy.setCentrePhone(source.getCentrePhone());
         copy.setLogoUrl(source.getLogoUrl());
         copy.setLayoutJson(source.getLayoutJson());
+        copy.setDoctor(source.getDoctor());
+        copy.setEmployee(source.getEmployee());
 
         return repo.save(copy);
     }

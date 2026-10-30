@@ -193,7 +193,7 @@ export default function PatientUpdate() {
                     <option value="">Select doctor</option>
                     {doctors.map((d) => (
                       <option key={d.id} value={d.id}>
-                        {d.dname} - {d.specialization} (₹{d.fee})
+                        {d.doctorName} - {d.specialization} (₹{d.fee})
                       </option>
                     ))}
                   </select>

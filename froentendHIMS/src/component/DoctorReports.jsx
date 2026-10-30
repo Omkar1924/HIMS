@@ -287,7 +287,7 @@ export default function DoctorReports() {
 
             {doctors.map((doctor) => (
               <option key={doctor.id} value={doctor.id}>
-                {doctor.dname || doctor.name || `Doctor ${doctor.id}`}
+                {doctor.doctorName || doctor.name || `Doctor ${doctor.id}`}
               </option>
             ))}
           </select>

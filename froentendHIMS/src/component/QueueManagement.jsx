@@ -41,7 +41,7 @@ const doctorName = (patient) =>
   patient.doctorName ||
   patient.drName ||
   patient.doctor?.name ||
-  patient.doctor?.dname ||
+  patient.doctor?.doctorName ||
   patient.outPatientDTO?.addDoctor?.doctorName ||
   "-";
 

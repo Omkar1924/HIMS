@@ -8,6 +8,8 @@ import {
   dsErrMsg,
 } from "../api/ApiDischarge";
 
+import { getDoctors, getEmploys } from "../api/ApiPatient";
+
 import DischargeSectionsEditor from "./DischargeSectionsEditor";
 import DischargeDocument from "./DischargeDocument";
 import {
@@ -31,7 +33,13 @@ const EMPTY_TEMPLATE = {
   logoUrl: "",
   layoutJson: "{}",
   active: true,
+  createdBy: "",
 };
+
+const CREATED_BY_TYPES = [
+  { value: "DOCTOR", label: "Doctor" },
+  { value: "EMPLOYEE", label: "Employee" },
+];
 
 const SAMPLE_PATIENT = {
   name: "[Patient name]",
@@ -50,6 +58,10 @@ export default function DischargeTemplateManager() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [doctors, setDoctors] = useState([]);
+  const [employs, setEmploys] = useState([]);
+  const [createdByType, setCreatedByType] = useState(null);
+  const [selectedPersonId, setSelectedPersonId] = useState(null);
 
   const loadTemplates = async () => {
     try {
@@ -59,17 +71,57 @@ export default function DischargeTemplateManager() {
     }
   };
 
+  const loadPeople = async () => {
+    try {
+      const [d, e] = await Promise.all([getDoctors(), getEmploys()]);
+      setDoctors(d);
+      setEmploys(e);
+    } catch (err) {
+      // Non-fatal: dropdowns will be empty if fetch fails
+      console.warn("Could not load doctors/employs", err);
+    }
+  };
+
   useEffect(() => {
     loadTemplates();
+    loadPeople();
   }, []);
 
   const updateField = (field, value) =>
     setDraft((prev) => ({ ...prev, [field]: value }));
 
+  const getAvailablePeople = () => {
+    if (createdByType === "DOCTOR") {
+      return doctors
+        .map((doc) => ({ id: doc.id, name: doc.doctorName || doc.name || "" }))
+        .filter((p) => p.name);
+    }
+    if (createdByType === "EMPLOYEE") {
+      return employs
+        .map((emp) => ({
+          id: emp.id,
+          name: [emp.firstName, emp.lastName].filter(Boolean).join(" ") || emp.userName || "",
+        }))
+        .filter((p) => p.name);
+    }
+    return [];
+  };
+
   const editTemplate = (template) => {
     setSelectedId(template.id);
     setDraft({ ...EMPTY_TEMPLATE, ...template });
     setSections(parseSections(template.sectionsJson));
+    // Restore which role type and person was selected when the template was saved.
+    if (template.doctor) {
+      setCreatedByType("DOCTOR");
+      setSelectedPersonId(template.doctor.id);
+    } else if (template.employee) {
+      setCreatedByType("EMPLOYEE");
+      setSelectedPersonId(template.employee.id);
+    } else {
+      setCreatedByType(null);
+      setSelectedPersonId(null);
+    }
     setError("");
     setMessage("");
     setView("editor");
@@ -79,6 +131,8 @@ export default function DischargeTemplateManager() {
     setSelectedId(null);
     setDraft({ ...EMPTY_TEMPLATE });
     setSections(defaultSections());
+    setCreatedByType(null);
+    setSelectedPersonId(null);
     setError("");
     setMessage("");
     setView("editor");
@@ -98,6 +152,10 @@ export default function DischargeTemplateManager() {
       setError("Template name is required.");
       return;
     }
+    if (!draft.createdBy?.trim()) {
+      setError("Please select who created the template.");
+      return;
+    }
     if (sections.length === 0) {
       setError("Add at least one section.");
       return;
@@ -111,7 +169,17 @@ export default function DischargeTemplateManager() {
       return;
     }
 
-    const payload = { ...draft, sectionsJson: serializeSections(sections) };
+    const payload = {
+      ...draft,
+      sectionsJson: serializeSections(sections),
+      // Send entity references so the backend can set doctor/employee relations.
+      doctor: createdByType === "DOCTOR" && selectedPersonId
+        ? { id: Number(selectedPersonId) }
+        : null,
+      employee: createdByType === "EMPLOYEE" && selectedPersonId
+        ? { id: Number(selectedPersonId) }
+        : null,
+    };
     const isEditing = selectedId != null;
 
     try {
@@ -180,6 +248,10 @@ export default function DischargeTemplateManager() {
       setLoading(false);
     }
   };
+
+  const availablePeople = getAvailablePeople();
+
+  const selectedPerson = availablePeople.find((p) => p.id === selectedPersonId);
 
   return (
     <div className="rp-page">
@@ -373,6 +445,68 @@ export default function DischargeTemplateManager() {
                 onChange={(e) => updateField("centreAddress", e.target.value)}
                 placeholder="Hospital address"
               />
+
+              {/* Created by: role type + person selector side by side */}
+              <div className="rp-created-by-row">
+                <div>
+                  <label className="rp-label" htmlFor="dt-created-by-type">
+                    Template created by *
+                  </label>
+                  <div className="rp-category-menu rp-mb" id="dt-created-by-type" role="listbox" style={{ position: "relative" }}>
+                    {CREATED_BY_TYPES.map((o) => (
+                      <button
+                        type="button"
+                        key={o.value}
+                        className={`rp-category-option${createdByType === o.value ? " active" : ""}`}
+                        onClick={() => {
+                          setCreatedByType(o.value);
+                          setSelectedPersonId(null);
+                          updateField("createdBy", "");
+                        }}
+                        role="option"
+                        aria-selected={createdByType === o.value}
+                      >
+                        {o.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {createdByType && (
+                  <div>
+                    <label className="rp-label" htmlFor="dt-created-by-person">
+                      Select {CREATED_BY_TYPES.find((o) => o.value === createdByType)?.label}
+                    </label>
+                    <div className="rp-category-menu rp-mb" id="dt-created-by-person" role="listbox" style={{ position: "relative" }}>
+                      {availablePeople.map((person) => (
+                        <button
+                          type="button"
+                          key={person.id}
+                          className={`rp-category-option${selectedPersonId === person.id ? " active" : ""}`}
+                          onClick={() => {
+                            setSelectedPersonId(person.id);
+                            updateField("createdBy", person.name);
+                          }}
+                          role="option"
+                          aria-selected={selectedPersonId === person.id}
+                        >
+                          {person.name}
+                        </button>
+                      ))}
+                      {availablePeople.length === 0 && (
+                        <div className="rp-category-option" style={{ color: "#64748b", cursor: "default" }}>
+                          No {CREATED_BY_TYPES.find((o) => o.value === createdByType)?.label.toLowerCase()}s found
+                        </div>
+                      )}
+                    </div>
+                    {draft.createdBy && (
+                      <p className="rp-muted rp-mb">
+                        Template recorded as created by {draft.createdBy}.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
 
               <h3 className="rp-mt">Report Sections</h3>
               <p className="rp-muted">

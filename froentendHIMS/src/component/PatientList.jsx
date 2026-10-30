@@ -158,7 +158,7 @@ export default function PatientList() {
                       </td>
                       <td>{p.address || <span className="muted">-</span>}</td>
                       <td>
-                        {p.doctor?.dname || <span className="muted">-</span>}
+                        {p.doctor?.doctorName || <span className="muted">-</span>}
                       </td>
                       <td>
                         <div className="actions">

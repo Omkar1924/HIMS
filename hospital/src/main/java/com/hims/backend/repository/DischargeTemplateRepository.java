@@ -11,4 +11,8 @@ public interface DischargeTemplateRepository extends JpaRepository<DischargeTemp
     List<DischargeTemplate> findAllByOrderByNameAsc();
     List<DischargeTemplate> findByActiveTrueOrderByNameAsc();
     Optional<DischargeTemplate> findByNameIgnoreCase(String name);
+
+    List<DischargeTemplate> findByDoctorId(Long doctorId);
+
+    List<DischargeTemplate> findByEmployeeId(Long employeeId);
 }

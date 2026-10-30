@@ -37,7 +37,7 @@ export const reportImageUrl = imageId => `${api.defaults.baseURL}/reports/images
 
 // ---- lookups from your existing endpoints (change paths to match your backend) ----
 export const getServices = () => api.get("/services").then(r => r.data);
-export const getDoctors = () => api.get("/doctors").then(r => r.data);
+export const getDoctors = () => api.get("/add-doctors").then(r => r.data);
 export const searchPatients = q => api.get("/bills/patients", { params: { q } }).then(r => r.data);
 
 export const sendToDepartment = (id, department) =>

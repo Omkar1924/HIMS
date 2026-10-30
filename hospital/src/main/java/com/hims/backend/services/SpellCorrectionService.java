@@ -75,16 +75,22 @@ public class SpellCorrectionService {
             int last = 0;
 
             for (JsonNode m : MAPPER.readTree(response.body()).path("matches")) {
-                if (!isSpelling(m)) continue;
+                if (!isSpelling(m)) {
+					continue;
+				}
 
                 int start = m.path("offset").asInt();
                 int end = start + m.path("length").asInt();
-                if (start < last || end > text.length()) continue;
+                if (start < last || end > text.length()) {
+					continue;
+				}
 
                 String word = text.substring(start, end);
                 String fix = m.path("replacements").path(0).path("value").asText("");
 
-                if (!safeToApply(text, start, end, word, fix)) continue;
+                if (!safeToApply(text, start, end, word, fix)) {
+					continue;
+				}
 
                 out.append(text, last, start).append(fix);
                 last = end;
@@ -115,17 +121,26 @@ public class SpellCorrectionService {
      * 2 edits away. This avoids "fixing" drug names, names and abbreviations.
      */
     private boolean safeToApply(String text, int start, int end, String word, String fix) {
-        if (word.length() < 4 || !word.matches("[a-z]+")) return false;
-        if (!fix.matches("[a-z]+") || fix.charAt(0) != word.charAt(0)) return false;
-        if (ignore.contains(word)) return false;
-        if (start > 0 && "/@_-0123456789".indexOf(text.charAt(start - 1)) >= 0) return false;
-        if (end < text.length() && "/@_-0123456789".indexOf(text.charAt(end)) >= 0) return false;
+        if (word.length() < 4 || !word.matches("[a-z]+") || !fix.matches("[a-z]+") || fix.charAt(0) != word.charAt(0)) {
+			return false;
+		}
+        if (ignore.contains(word)) {
+			return false;
+		}
+        if (start > 0 && "/@_-0123456789".indexOf(text.charAt(start - 1)) >= 0) {
+			return false;
+		}
+        if (end < text.length() && "/@_-0123456789".indexOf(text.charAt(end)) >= 0) {
+			return false;
+		}
         return distance(word, fix) <= 2;
     }
 
     private int distance(String a, String b) {
         int[] prev = new int[b.length() + 1];
-        for (int j = 0; j <= b.length(); j++) prev[j] = j;
+        for (int j = 0; j <= b.length(); j++) {
+			prev[j] = j;
+		}
         for (int i = 1; i <= a.length(); i++) {
             int[] cur = new int[b.length() + 1];
             cur[0] = i;

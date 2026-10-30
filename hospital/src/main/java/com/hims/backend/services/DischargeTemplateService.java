@@ -69,7 +69,13 @@ public class DischargeTemplateService {
                 ? "PATIENT DISCHARGE SUMMARY"
                 : in.getDocumentTitle());
         template.setActive(in.isActive());
+        template.setDoctor(in.getDoctor());
+        template.setEmployee(in.getEmployee());
         template.setSectionsJson(in.getSectionsJson());
+        // Track who created the template (doctor or employee).
+        if (in.getCreatedBy() != null && !in.getCreatedBy().isBlank()) {
+            template.setCreatedBy(in.getCreatedBy().trim());
+        }
 
         // Update only when supplied, so an omitted field does not erase an existing value.
         if (in.getCentreName() != null) {

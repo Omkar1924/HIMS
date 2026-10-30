@@ -379,7 +379,7 @@ export default function DischargeSummaries({ role = "NURSE" }) {
             <option value="">Select doctor...</option>
             {doctors.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.dname || d.name}
+                {d.doctorName || d.name}
                 {d.qualification ? ` (${d.qualification})` : ""}
               </option>
             ))}

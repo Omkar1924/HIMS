@@ -5,8 +5,23 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "bill")
@@ -21,14 +36,26 @@ public class Bill {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    private PatientRegistration patient;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "doctor_id", nullable = false)
-    private Doctor doctor;
+    private AddDoctor doctor;
 
     @Column(name = "doctor_fee", precision = 38, scale = 2)
     private BigDecimal doctorFee = BigDecimal.ZERO;
+
+    @Column(name = "doctor_dname")
+    private String doctorDname;
+
+    @Column(name = "doctor_specialization")
+    private String doctorSpecialization;
+
+    @Column(name = "doctor_qualification")
+    private String doctorQualification;
+
+    @Column(name = "doctor_registration_no")
+    private String doctorRegistrationNo;
 
     @Column(name = "services_total", precision = 38, scale = 2)
     private BigDecimal servicesTotal = BigDecimal.ZERO;

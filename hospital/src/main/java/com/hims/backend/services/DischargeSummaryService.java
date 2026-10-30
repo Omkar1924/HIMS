@@ -15,30 +15,30 @@ import com.hims.backend.dto.DischargeDtos.SummaryResponse;
 import com.hims.backend.dto.DischargeDtos.UpdateSummary;
 import com.hims.backend.dto.ReportDtos.DoctorInfo;
 import com.hims.backend.dto.ReportDtos.PatientInfo;
+import com.hims.backend.entity.AddDoctor;
 import com.hims.backend.entity.DischargeStatus;
 import com.hims.backend.entity.DischargeSummary;
 import com.hims.backend.entity.DischargeTemplate;
-import com.hims.backend.entity.Doctor;
-import com.hims.backend.entity.Patient;
+import com.hims.backend.entity.PatientRegistration;
 import com.hims.backend.exception.PatientNotFoundException;
+import com.hims.backend.repository.AddDoctorRepository;
 import com.hims.backend.repository.DischargeSummaryRepository;
 import com.hims.backend.repository.DischargeTemplateRepository;
-import com.hims.backend.repository.DoctorRepository;
-import com.hims.backend.repository.PatientRepository;
+import com.hims.backend.repository.PatientRegistrationRepository;
 
 @Service
 public class DischargeSummaryService {
 
     private final DischargeSummaryRepository repo;
     private final DischargeTemplateRepository templateRepo;
-    private final PatientRepository patientRepo;
-    private final DoctorRepository doctorRepo;
+    private final PatientRegistrationRepository patientRepo;
+    private final AddDoctorRepository doctorRepo;
     private final NarrativeRenderer renderer;
 
     public DischargeSummaryService(DischargeSummaryRepository repo,
                                    DischargeTemplateRepository templateRepo,
-                                   PatientRepository patientRepo,
-                                   DoctorRepository doctorRepo,
+                                   PatientRegistrationRepository patientRepo,
+                                   AddDoctorRepository doctorRepo,
                                    NarrativeRenderer renderer) {
         this.repo = repo;
         this.templateRepo = templateRepo;
@@ -67,9 +67,9 @@ public class DischargeSummaryService {
 
         DischargeTemplate template = templateRepo.findById(in.templateId())
                 .orElseThrow(() -> err(HttpStatus.NOT_FOUND, "Template not found"));
-        Patient patient = patientRepo.findByUhid(in.patientUhid().trim())
+        PatientRegistration patient = patientRepo.findByUhid(in.patientUhid().trim())
                 .orElseThrow(() -> new PatientNotFoundException(in.patientUhid()));
-        Doctor doctor = in.doctorId() != null
+        AddDoctor doctor = in.doctorId() != null
                 ? doctorRepo.findById(in.doctorId())
                         .orElseThrow(() -> err(HttpStatus.NOT_FOUND, "Doctor not found"))
                 : patient.getDoctor();
@@ -78,6 +78,11 @@ public class DischargeSummaryService {
         s.setTemplate(template);
         s.setPatient(patient);
         s.setDoctor(doctor);
+        s.setDoctorDname(doctor.getDoctorName());
+        s.setDoctorSpecialization(doctor.getSpecialization());
+        s.setDoctorFee(doctor.getFee());
+        s.setDoctorQualification(doctor.getDegree());
+        s.setDoctorRegistrationNo(doctor.getRegistrationNo());
         s.setAdmissionDate(in.admissionDate());
         s.setDischargeDate(in.dischargeDate());
         s.setPreparedBy(in.preparedBy());
@@ -169,7 +174,7 @@ public class DischargeSummaryService {
         }
         s.setRenderedJson(renderer.render(s.getSectionsJson()));
         s.setStatus(DischargeStatus.APPROVED);
-        s.setApprovedBy(in == null || isBlank(in.approvedBy()) ? s.getDoctor().getDname() : in.approvedBy());
+        s.setApprovedBy(in == null || isBlank(in.approvedBy()) ? s.getDoctor().getDoctorName() : in.approvedBy());
         s.setApprovedAt(LocalDateTime.now());
         return toResponse(repo.save(s));
     }
@@ -204,7 +209,7 @@ public class DischargeSummaryService {
         return v == null ? null : String.valueOf(v);
     }
 
-    private PatientInfo toPatient(Patient p) {
+    private PatientInfo toPatient(PatientRegistration p) {
         String fullName = java.util.stream.Stream.of(p.getFirstName(), p.getMiddleName(), p.getLastName())
                 .filter(n -> n != null && !n.isBlank())
                 .map(String::trim)
@@ -214,8 +219,8 @@ public class DischargeSummaryService {
                 str(p.getAge()), p.getContact());
     }
 
-    private DoctorInfo toDoctor(Doctor d) {
-        return new DoctorInfo(d.getId(), d.getDname(), d.getQualification(),
+    private DoctorInfo toDoctor(AddDoctor d) {
+        return new DoctorInfo(d.getId(), d.getDoctorName(), d.getSpecialization(),
                 d.getRegistrationNo());
     }
 

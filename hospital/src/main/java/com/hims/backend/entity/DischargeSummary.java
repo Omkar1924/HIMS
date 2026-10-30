@@ -1,5 +1,6 @@
 package com.hims.backend.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -40,12 +41,27 @@ public class DischargeSummary {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "patient_id")
-    private Patient patient;
+    private PatientRegistration patient;
 
     // Doctor who reviews and approves
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
+    private AddDoctor doctor;
+
+    @Column(name = "doctor_dname")
+    private String doctorDname;
+
+    @Column(name = "doctor_specialization")
+    private String doctorSpecialization;
+
+    @Column(name = "doctor_fee", precision = 38, scale = 2)
+    private BigDecimal doctorFee;
+
+    @Column(name = "doctor_qualification")
+    private String doctorQualification;
+
+    @Column(name = "doctor_registration_no")
+    private String doctorRegistrationNo;
 
     @Column(name = "admission_date")
     private LocalDate admissionDate;
@@ -95,7 +111,7 @@ public class DischargeSummary {
     void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-    
+
     private String xtre1;
     private String xtre2;
     private String xtre3;

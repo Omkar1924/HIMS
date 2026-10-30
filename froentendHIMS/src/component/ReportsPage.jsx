@@ -427,7 +427,7 @@ function NewReport({ onCreated }) {
               <option value="">Default patient's doctor</option>
               {doctors.map((d) => (
                 <option key={d.id} value={d.id}>
-                  {d.dname || d.name}
+                  {d.doctorName || d.name}
                 </option>
               ))}
             </select>

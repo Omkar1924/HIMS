@@ -23,15 +23,15 @@ import com.hims.backend.dto.BillDtos.ItemRequest;
 import com.hims.backend.dto.BillDtos.PatientPrefill;
 import com.hims.backend.dto.BillDtos.PaymentDto;
 import com.hims.backend.dto.BillDtos.PaymentRequest;
+import com.hims.backend.entity.AddDoctor;
 import com.hims.backend.entity.Bill;
 import com.hims.backend.entity.BillItem;
 import com.hims.backend.entity.BillStatus;
 import com.hims.backend.entity.DepositTxn;
 import com.hims.backend.entity.DepositType;
-import com.hims.backend.entity.Doctor;
 import com.hims.backend.entity.FinalBill;
 import com.hims.backend.entity.MedicalService;
-import com.hims.backend.entity.Patient;
+import com.hims.backend.entity.PatientRegistration;
 import com.hims.backend.entity.Payment;
 import com.hims.backend.entity.PaymentMode;
 import com.hims.backend.exception.PatientNotFoundException;
@@ -39,18 +39,18 @@ import com.hims.backend.repository.BillRepository;
 import com.hims.backend.repository.DepositTxnRepository;
 import com.hims.backend.repository.FinalBillRepository;
 import com.hims.backend.repository.MedicalServiceRepository;
-import com.hims.backend.repository.PatientRepository;
+import com.hims.backend.repository.PatientRegistrationRepository;
 
 @Service
 public class BillService {
 
     private final BillRepository billRepository;
-    private final PatientRepository patientRepository;
+    private final PatientRegistrationRepository patientRepository;
     private final MedicalServiceRepository serviceRepository;
     private final DepositTxnRepository depositRepository;
     private final FinalBillRepository finalBillRepository;
 
-    public BillService(BillRepository billRepository, PatientRepository patientRepository,
+    public BillService(BillRepository billRepository, PatientRegistrationRepository patientRepository,
                        MedicalServiceRepository serviceRepository,
                        DepositTxnRepository depositRepository,
                        FinalBillRepository finalBillRepository) {
@@ -66,11 +66,11 @@ public class BillService {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
     }
 
-    private String fullName(Patient p) {
+    private String fullName(PatientRegistration p) {
         return (p.getFirstName() + " " + (p.getLastName() == null ? "" : p.getLastName())).trim();
     }
 
-    private Patient findPatient(String uhid) {
+    private PatientRegistration findPatient(String uhid) {
         return patientRepository.findByUhid(uhid).orElseThrow(() -> new PatientNotFoundException(uhid));
     }
 
@@ -93,8 +93,8 @@ public class BillService {
             throw bad("Invalid payment mode: " + mode + ". Allowed: " + paymentModes());
         }
         if (pm == PaymentMode.DEPOSIT) {
-			throw bad("Use the deposit option to pay from deposit");
-		}
+            throw bad("Use the deposit option to pay from deposit");
+        }
         return pm;
     }
 
@@ -120,7 +120,7 @@ public class BillService {
         return depositBalance(pid).subtract(outstanding(pid)).max(BigDecimal.ZERO);
     }
 
-    private void saveDeposit(Patient p, Bill bill, DepositType type, BigDecimal amount,
+    private void saveDeposit(PatientRegistration p, Bill bill, DepositType type, BigDecimal amount,
                              PaymentMode mode, String note) {
         DepositTxn t = new DepositTxn();
         t.setPatient(p);
@@ -135,12 +135,12 @@ public class BillService {
     @Transactional
     public DepositSummary addDeposit(DepositRequest req) {
         if (req.uhid() == null || req.uhid().isBlank()) {
-			throw bad("UHID is required");
-		}
+            throw bad("UHID is required");
+        }
         if (req.amount() == null || req.amount().signum() <= 0) {
-			throw bad("Deposit amount must be greater than 0");
-		}
-        Patient p = findPatient(req.uhid());
+            throw bad("Deposit amount must be greater than 0");
+        }
+        PatientRegistration p = findPatient(req.uhid());
         saveDeposit(p, null, DepositType.DEPOSIT, req.amount(), parseMode(req.mode()), "Advance deposit");
         return depositSummaryFor(p);
     }
@@ -150,7 +150,7 @@ public class BillService {
         return depositSummaryFor(findPatient(uhid));
     }
 
-    private DepositSummary depositSummaryFor(Patient p) {
+    private DepositSummary depositSummaryFor(PatientRegistration p) {
         Long pid = p.getId();
         BigDecimal dep = depositRepository.sumByType(pid, DepositType.DEPOSIT);
         BigDecimal adj = depositRepository.sumByType(pid, DepositType.ADJUSTED);
@@ -178,10 +178,10 @@ public class BillService {
         return toPrefill(findPatient(uhid));
     }
 
-    private PatientPrefill toPrefill(Patient p) {
-        Doctor d = p.getDoctor();
+    private PatientPrefill toPrefill(PatientRegistration p) {
+        AddDoctor d = p.getDoctor();
         return new PatientPrefill(p.getUhid(), fullName(p), p.getAge(), p.getContact(),
-                d.getId(), d.getDname(), d.getSpecialization(),
+                d.getId(), d.getDoctorName(), d.getSpecialization(),
                 d.getFee() == null ? BigDecimal.ZERO : d.getFee(),
                 depositBalance(p.getId()));
     }
@@ -190,17 +190,22 @@ public class BillService {
     @Transactional
     public BillResponse create(BillRequest req) {
         if (req.uhid() == null || req.uhid().isBlank()) {
-			throw bad("UHID is required");
-		}
+            throw bad("UHID is required");
+        }
 
-        Patient p = findPatient(req.uhid());
-        Doctor d = p.getDoctor();
+        PatientRegistration p = findPatient(req.uhid());
+        AddDoctor d = p.getDoctor();
         BigDecimal doctorFee = d.getFee() == null ? BigDecimal.ZERO : d.getFee();
 
         Bill bill = new Bill();
         bill.setPatient(p);
         bill.setDoctor(d);
         bill.setDoctorFee(doctorFee);
+        bill.setDoctorDname(d.getDoctorName());
+        bill.setDoctorSpecialization(d.getSpecialization());
+        bill.setDoctorQualification(d.getDegree());
+        bill.setDoctorRegistrationNo(d.getRegistrationNo());
+        bill.setDoctorFee(d.getFee() == null ? doctorFee : d.getFee());
 
         BigDecimal servicesTotal = BigDecimal.ZERO;
         if (req.items() != null) {
@@ -232,8 +237,8 @@ public class BillService {
         if (Boolean.TRUE.equals(req.useDeposit())) {
             BigDecimal use = depositBalance(p.getId()).min(bill.getTotalAmount());
             if (use.signum() > 0) {
-				applyDepositToBill(bill, use);
-			}
+                applyDepositToBill(bill, use);
+            }
         }
         // 2) then the amount paid now (excess goes to deposit)
         if (req.paidAmount() != null && req.paidAmount().signum() > 0) {
@@ -256,16 +261,16 @@ public class BillService {
     public BillResponse payFromDeposit(String billNo) {
         Bill bill = findBill(billNo);
         if (bill.getFinalBill() != null) {
-			throw bad("Bill is already finalized");
-		}
+            throw bad("Bill is already finalized");
+        }
         BigDecimal balance = balanceOf(bill);
         if (balance.signum() <= 0) {
-			throw bad("Bill is already fully paid");
-		}
+            throw bad("Bill is already fully paid");
+        }
         BigDecimal available = depositBalance(bill.getPatient().getId());
         if (available.signum() <= 0) {
-			throw bad("No deposit available for this patient");
-		}
+            throw bad("No deposit available for this patient");
+        }
         applyDepositToBill(bill, available.min(balance));
         return toResponse(billRepository.save(bill));
     }
@@ -273,21 +278,21 @@ public class BillService {
     /** Pays up to the balance; anything extra is stored as deposit. */
     private void applyPayment(Bill bill, BigDecimal amount, String mode) {
         if (amount == null || amount.signum() <= 0) {
-			throw bad("Payment amount must be greater than 0");
-		}
+            throw bad("Payment amount must be greater than 0");
+        }
         if (bill.getFinalBill() != null) {
-			throw bad("Bill is already finalized");
-		}
+            throw bad("Bill is already finalized");
+        }
         PaymentMode pm = parseMode(mode);
 
         BigDecimal toBill = amount.min(balanceOf(bill));
         BigDecimal extra = amount.subtract(toBill);
 
         if (toBill.signum() > 0) {
-			recordPayment(bill, toBill, pm);
-		} else {
-			refreshStatus(bill);
-		}
+            recordPayment(bill, toBill, pm);
+        } else {
+            refreshStatus(bill);
+        }
         if (extra.signum() > 0) {
             saveDeposit(bill.getPatient(), bill, DepositType.DEPOSIT, extra, pm,
                     "Excess payment on " + bill.getBillNo());
@@ -312,22 +317,22 @@ public class BillService {
 
     private void refreshStatus(Bill bill) {
         if (bill.getPaidAmount().compareTo(bill.getTotalAmount()) >= 0) {
-			bill.setStatus(BillStatus.PAID);
-		} else if (bill.getPaidAmount().signum() > 0) {
-			bill.setStatus(BillStatus.PARTIAL);
-		} else {
-			bill.setStatus(BillStatus.PENDING);
-		}
+            bill.setStatus(BillStatus.PAID);
+        } else if (bill.getPaidAmount().signum() > 0) {
+            bill.setStatus(BillStatus.PARTIAL);
+        } else {
+            bill.setStatus(BillStatus.PENDING);
+        }
     }
 
     // ================= final bill / checkout =================
     @Transactional(readOnly = true)
     public CheckoutPreview checkoutPreview(String uhid) {
-        Patient p = findPatient(uhid);
+        PatientRegistration p = findPatient(uhid);
         return buildPreview(p, billRepository.findByPatientIdAndFinalBillIsNullOrderByIdAsc(p.getId()));
     }
 
-    private CheckoutPreview buildPreview(Patient p, List<Bill> bills) {
+    private CheckoutPreview buildPreview(PatientRegistration p, List<Bill> bills) {
         BigDecimal billed = sum(bills, Bill::getTotalAmount);
         BigDecimal paid = sum(bills, Bill::getPaidAmount);
         BigDecimal balance = billed.subtract(paid);
@@ -342,13 +347,13 @@ public class BillService {
     @Transactional
     public FinalBillResponse checkout(CheckoutRequest req) {
         if (req.uhid() == null || req.uhid().isBlank()) {
-			throw bad("UHID is required");
-		}
-        Patient p = findPatient(req.uhid());
+            throw bad("UHID is required");
+        }
+        PatientRegistration p = findPatient(req.uhid());
         List<Bill> bills = billRepository.findByPatientIdAndFinalBillIsNullOrderByIdAsc(p.getId());
         if (bills.isEmpty()) {
-			throw bad("No open bills for this patient");
-		}
+            throw bad("No open bills for this patient");
+        }
 
         CheckoutPreview pv = buildPreview(p, bills);
         BigDecimal toPay = pv.amountToPay();
@@ -362,16 +367,16 @@ public class BillService {
             payMode = parseMode(req.payMode());
         }
         if (refund.signum() > 0) {
-			refundMode = parseMode(req.refundMode());
-		}
+            refundMode = parseMode(req.refundMode());
+        }
 
         // 1) apply deposit
         BigDecimal depositLeft = pv.depositToUse();
         for (Bill b : bills) {
             BigDecimal bal = balanceOf(b);
             if (bal.signum() <= 0 || depositLeft.signum() <= 0) {
-				continue;
-			}
+                continue;
+            }
             BigDecimal use = depositLeft.min(bal);
             applyDepositToBill(b, use);
             depositLeft = depositLeft.subtract(use);
@@ -381,8 +386,8 @@ public class BillService {
         for (Bill b : bills) {
             BigDecimal bal = balanceOf(b);
             if (bal.signum() <= 0 || cashLeft.signum() <= 0) {
-				continue;
-			}
+                continue;
+            }
             BigDecimal part = cashLeft.min(bal);
             recordPayment(b, part, payMode);
             cashLeft = cashLeft.subtract(part);
@@ -421,7 +426,7 @@ public class BillService {
     }
 
     private FinalBillResponse toFinal(FinalBill f) {
-        Patient p = f.getPatient();
+        PatientRegistration p = f.getPatient();
         return new FinalBillResponse(f.getFinalNo(), p.getUhid(), fullName(p),
                 f.getBills().stream().map(Bill::getBillNo).toList(),
                 f.getTotalBilled(), f.getPaidBefore(), f.getDepositUsed(),
@@ -455,10 +460,10 @@ public class BillService {
     }
 
     private BillResponse toResponse(Bill b) {
-        Patient p = b.getPatient();
+        PatientRegistration p = b.getPatient();
         return new BillResponse(
                 b.getBillNo(), p.getUhid(), fullName(p),
-                b.getDoctor().getDname(), b.getDoctorFee(),
+                b.getDoctor().getDoctorName(), b.getDoctorFee(),
                 b.getItems().stream().map(i -> new ItemDto(i.getServiceName(), i.getCategory(),
                         i.getCharge(), i.getQuantity(), i.getAmount())).toList(),
                 b.getServicesTotal(), b.getTotalAmount(), b.getPaidAmount(),

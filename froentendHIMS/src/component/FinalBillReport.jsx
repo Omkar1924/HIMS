@@ -90,7 +90,7 @@ export default function FinalBillReport() {
     [patientDetails?.firstName, patientDetails?.middleName, patientDetails?.lastName].filter(Boolean).join(" ") ||
     finalBill?.patientName || "-";
   const consultant = patientDetails?.doctorName ||
-    patientDetails?.doctor?.dname ||
+    patientDetails?.doctor?.doctorName ||
     patientDetails?.doctor?.name ||
     bills.find((bill) => bill.doctorName)?.doctorName || "-";
   const paymentEntries = (patientBills || []).flatMap((bill) =>

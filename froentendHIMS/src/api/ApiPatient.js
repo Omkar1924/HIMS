@@ -13,7 +13,7 @@ const make = (baseURL) => {
   return inst;
 };
 
-const api = make("http://localhost:8085/api/patients");
+const api = make("http://localhost:8085/api/patient-registrations");
 const root = make("http://localhost:8085/api");
 
 // ---------- patients ----------
@@ -24,7 +24,8 @@ export const updatePatient = (uhid, data) => api.put(`/${uhid}`, data).then((r) 
 export const deletePatient = (uhid) => api.delete(`/${uhid}`).then((r) => r.data);
 
 // ---------- doctors / services ----------
-export const getDoctors = () => root.get("/doctors").then((r) => r.data);
+export const getDoctors = () => root.get("/add-doctors").then((r) => r.data);
+export const getEmploys = () => root.get("/employees").then((r) => r.data);
 export const getServices = () => root.get("/services").then((r) => r.data);
 
 // ---------- billing ----------
