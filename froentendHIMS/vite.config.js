@@ -4,12 +4,13 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: "0.0.0.0",
+    port: 5173,
     proxy: {
-      // browser calls /queue-api/...  ->  https://ashapuri.157ipl.com/api/...
       "/queue-api": {
-        target: "https://ashapuri.157ipl.com",
+        target: "http://93.127.199.85:4090",
         changeOrigin: true,
-        secure: true,
+        secure: false,
         rewrite: (path) => path.replace(/^\/queue-api/, "/api"),
       },
     },
