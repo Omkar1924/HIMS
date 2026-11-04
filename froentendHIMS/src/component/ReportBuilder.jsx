@@ -15,6 +15,7 @@ import {
 } from "../api/ApiReporting";
 
 import ImageViewer from "./ImageViewer";
+import { encodeContent, decodeContent } from "../utils/reportCodec";
 import "../style/reports.css";
 
 const parse = (value, fallback) => {
@@ -124,7 +125,7 @@ export default function ReportBuilder({
 
       setReport(result);
 
-      const savedValues = parse(result.contentJson, {});
+      const savedValues = parse(decodeContent(result.contentJson), {});
 
       // Older versions could store all sections under "undefined".
       // That value cannot safely be assigned to any individual section.
@@ -234,7 +235,7 @@ export default function ReportBuilder({
     }));
   };
 
-  const content = () => JSON.stringify(values);
+  const content = () => encodeContent(JSON.stringify(values));
 
   const save = () =>
     run(async () => {
@@ -393,10 +394,10 @@ export default function ReportBuilder({
         <div className="rp-patient">
           <div>
             <div className="rp-pname">
-              {report.patient?.name}
+              {decodeContent(report.patient?.name)}
             </div>
 
-            <div>UHID: {report.patient?.uhid}</div>
+            <div>UHID: {decodeContent(report.patient?.uhid)}</div>
 
             {report.patient?.gender && (
               <div>Sex: {report.patient.gender}</div>
@@ -416,7 +417,7 @@ export default function ReportBuilder({
 
             <div>
               Ref. by:{" "}
-              <b>{report.referringDoctor?.name || "-"}</b>
+              <b>{decodeContent(report.referringDoctor?.name) || "-"}</b>
             </div>
           </div>
 
@@ -612,14 +613,14 @@ export default function ReportBuilder({
 
         {locked && signer && (
           <div className="rp-sign">
-            <b>{signer.name}</b>
+            <b>{decodeContent(signer.name)}</b>
 
             {signer.qualification && (
-              <div>{signer.qualification}</div>
+              <div>{decodeContent(signer.qualification)}</div>
             )}
 
             {signer.registrationNo && (
-              <div>Reg. No: {signer.registrationNo}</div>
+              <div>Reg. No: {decodeContent(signer.registrationNo)}</div>
             )}
           </div>
         )}

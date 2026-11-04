@@ -4,11 +4,11 @@ import "../style/navbar.css";
 export default function Navbar() {
   return (
     <nav className="navbar">
-      {/* <Link className="navbar-brand" to="/">
+      <Link className="navbar-brand" to="/">
         HIMS
-      </Link> */}
+      </Link>
       <div className="flex gap-2">
-        {/* <Link className="btn btn-sm btn-primary" to="/">
+        <Link className="btn btn-sm btn-primary" to="/">
           Register
         </Link>
         <Link className="btn btn-sm btn-outline-light" to="/view">
@@ -22,17 +22,17 @@ export default function Navbar() {
         </Link>
         <Link className="btn btn-sm btn-outline-light" to="/queue">
           Queue
-        </Link> */}
-        {/* <Link className="rp-btn rp-btn-primary" to="/report-templates">
+        </Link>
+        <Link className="rp-btn rp-btn-primary" to="/report-templates">
           Report Templates
         </Link>
         <Link className="rp-btn rp-btn-primary" to="/clinical-summary">
           Clinical Summary
-        </Link> */}
+        </Link>
         <Link className="rp-btn rp-btn-primary" to="/discharge/templates">
           Discharge Templates
         </Link>
-        {/* <Link className="btn btn-sm btn-outline-light" to="/reports">
+        <Link className="btn btn-sm btn-outline-light" to="/reports">
           Reports
         </Link>
         <Link className="btn btn-sm btn-outline-light" to="/doctor">
@@ -40,7 +40,7 @@ export default function Navbar() {
         </Link>
         <Link className="btn btn-sm btn-outline-light" to="/department">
           Department
-        </Link> */}
+        </Link>
       </div>
     </nav>
   );

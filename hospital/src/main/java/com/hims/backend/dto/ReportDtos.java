@@ -43,4 +43,8 @@ public class ReportDtos {
 
 	public record ReturnToDoctor(String filledBy, String departmentRemark) {
 	}
+
+	public record EncodedPatientInfo(Long id, String encodedUhid, String encodedName, String encodedGender,
+			String encodedAge, String encodedPhone) {
+	}
 }

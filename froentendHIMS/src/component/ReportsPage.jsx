@@ -10,6 +10,7 @@ import {
   searchPatients,
 } from "../api/ApiReporting";
 import ReportBuilder from "./ReportBuilder";
+import { encodeContent, decodeContent } from "../utils/reportCodec";
 import "../style/reports.css";
 
 const LAB_RAD = ["LAB", "XRAY", "MRI", "CT", "USG"];
@@ -143,10 +144,10 @@ function ReportList({ params, onOpen }) {
             >
               <td>{r.reportNo}</td>
               <td>
-                {r.patient?.name} ({r.patient?.uhid})
+                {decodeContent(r.patient?.name)} ({decodeContent(r.patient?.uhid)})
               </td>
               <td>{r.testName}</td>
-              <td>{r.referringDoctor?.name || "-"}</td>
+              <td>{decodeContent(r.referringDoctor?.name || "-")}</td>
               <td>
                 <span className={`rp-badge rp-st-${r.status}`}>
                   {r.status?.replaceAll("_", " ")}
@@ -213,7 +214,7 @@ function Pending({ onOpen }) {
         referringDoctorId: p.doctorId,
         billItemId: p.billItemId,
         visitType: "OPD",
-        contentJson: "{}",
+        contentJson: encodeContent("{}"),
         createdBy: "technician",
       });
 
@@ -246,7 +247,7 @@ function Pending({ onOpen }) {
               <tr key={p.billItemId}>
                 <td>{p.billNo}</td>
                 <td>
-                  {p.patientName} ({p.uhid})
+                  {decodeContent(p.patientName)} ({decodeContent(p.uhid)})
                 </td>
                 <td>{p.testName}</td>
                 <td>{p.doctorName || "-"}</td>
@@ -346,7 +347,7 @@ function NewReport({ onCreated }) {
         patientUhid: patient.uhid,
         referringDoctorId: doctorId ? Number(doctorId) : null,
         visitType,
-        contentJson: "{}",
+        contentJson: encodeContent("{}"),
         createdBy: "technician",
       });
 

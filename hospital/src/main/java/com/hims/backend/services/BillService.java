@@ -181,8 +181,10 @@ public class BillService {
     private PatientPrefill toPrefill(PatientRegistration p) {
         AddDoctor d = p.getDoctor();
         return new PatientPrefill(p.getUhid(), fullName(p), p.getAge(), p.getContact(),
-                d.getId(), d.getDoctorName(), d.getSpecialization(),
-                d.getFee() == null ? BigDecimal.ZERO : d.getFee(),
+                d == null ? null : d.getId(),
+                d == null ? null : d.getDoctorName(),
+                d == null ? null : d.getSpecialization(),
+                d == null || d.getFee() == null ? BigDecimal.ZERO : d.getFee(),
                 depositBalance(p.getId()));
     }
 

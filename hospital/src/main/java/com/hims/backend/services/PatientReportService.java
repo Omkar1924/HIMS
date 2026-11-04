@@ -37,6 +37,7 @@ import com.hims.backend.repository.PatientRegistrationRepository;
 import com.hims.backend.repository.PatientReportRepository;
 import com.hims.backend.repository.ReportImageRepository;
 import com.hims.backend.repository.ReportTemplateRepository;
+import com.hims.backend.util.ReportContentCodec;
 
 import lombok.RequiredArgsConstructor;
 
@@ -81,7 +82,7 @@ public class PatientReportService {
         r.setVisitType(q.visitType());
         r.setCategory(q.category());
         r.setTestName(q.testName());
-        r.setContentJson(q.contentJson() == null ? "{}" : q.contentJson());
+        r.setContentJson(ReportContentCodec.decode(q.contentJson() == null ? "{}" : q.contentJson()));
         r.setCreatedBy(q.createdBy());
 
         if (q.serviceId() != null) {
@@ -113,7 +114,7 @@ public class PatientReportService {
             throw bad("Approved reports cannot be edited");
         }
         if (q.contentJson() != null) {
-            r.setContentJson(q.contentJson());
+            r.setContentJson(ReportContentCodec.decode(q.contentJson()));
         }
         if (q.testName() != null) {
             r.setTestName(q.testName());
@@ -233,7 +234,8 @@ public class PatientReportService {
             Bill b = bi.getBill();
             PatientRegistration p = b.getPatient();
             AddDoctor d = b.getDoctor();
-            return new PendingTest(bi.getId(), b.getBillNo(), p.getUhid(), fullName(p),
+            return new PendingTest(bi.getId(), b.getBillNo(), ReportContentCodec.encode(p.getUhid()),
+                    ReportContentCodec.encode(fullName(p)),
                     d == null ? null : d.getId(),
                     d == null ? null : d.getDoctorName(),
                     bi.getServiceName(), bi.getCategory());
@@ -295,12 +297,23 @@ public class PatientReportService {
         if (d == null) {
             return null;
         }
-        return new DoctorInfo(d.getId(), d.getDoctorName(), d.getSpecialization(), d.getRegistrationNo());
+        // Sensitive doctor details are encoded for the network response;
+        // the frontend decodes them before displaying on screen.
+        return new DoctorInfo(
+                d.getId(),
+                ReportContentCodec.encode(d.getDoctorName()),
+                ReportContentCodec.encode(d.getSpecialization()),
+                ReportContentCodec.encode(d.getRegistrationNo())
+        );
     }
 
     private PatientInfo toPatient(PatientRegistration p) {
-        // TODO: add gender / age / phone getters from your PatientRegistration entity if you want them in the header
-        return new PatientInfo(p.getId(), p.getUhid(), fullName(p), null, null, null);
+        return new PatientInfo(
+            p.getId(),
+            ReportContentCodec.encode(p.getUhid()),
+            ReportContentCodec.encode(fullName(p)),
+            null, null, null
+        );
     }
 
     private ImageInfo toImage(ReportImage i) {
@@ -316,7 +329,7 @@ public class PatientReportService {
                 r.getTemplate() == null ? null : r.getTemplate().getId(),
                 r.getTemplate() == null ? null : r.getTemplate().getSectionsJson(),
                 toPatient(r.getPatient()), toDoctor(r.getReferringDoctor()), toDoctor(r.getReviewingDoctor()),
-                r.getContentJson(), r.getDoctorComment(), r.getCreatedBy(),
+                ReportContentCodec.encode(r.getContentJson()), r.getDoctorComment(), r.getCreatedBy(),
                 r.getApprovedAt(), r.getCreatedAt(), r.getUpdatedAt(), images,
                 r.getDepartment(), r.getDepartmentRemark(), r.getFilledBy());
     }

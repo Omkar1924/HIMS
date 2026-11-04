@@ -7,6 +7,7 @@ import {
   createReport,
 } from "../api/ApiReporting";
 import ReportBuilder from "./ReportBuilder";
+import { encodeContent } from "../utils/reportCodec";
 import TemplatePreview from "./TemplatePreview";
 import SectionsEditor from "./SectionsEditor";
 import SaveAsTemplate from "./SaveAsTemplate";
@@ -135,7 +136,7 @@ export default function DoctorReports() {
           selectedTemplate.name,
         patientUhid: patient.uhid,
         referringDoctorId: doctorId ? Number(doctorId) : null,
-        contentJson: serializeSections(sections),
+        contentJson: encodeContent(serializeSections(sections)),
         createdBy: "doctor",
       });
 
